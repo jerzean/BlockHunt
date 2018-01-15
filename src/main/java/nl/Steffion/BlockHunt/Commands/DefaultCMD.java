@@ -15,12 +15,8 @@ import nl.Steffion.BlockHunt.Managers.MessageManager;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
-public class DefaultCMD {
+public abstract class  DefaultCMD {
 
 
-	public boolean exectue(Player player, Command cmd, String label, String[] args) {
-		MessageManager.sendMessage(player, "%TAG%NExample of a Command!");
-		// TODO Place the command stuff here.
-		return true;
-	}
+	public abstract boolean execute(Player player, Command cmd, String label, String[] args);
 }

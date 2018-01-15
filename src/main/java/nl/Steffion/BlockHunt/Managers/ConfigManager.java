@@ -28,21 +28,26 @@ public class ConfigManager {
 	private FileConfiguration fileC;
 	private ConfigurationSection fileCS;
 	private File fileLocation;
-
+    private BlockHunt plugin;
 	/**
 	 * Use this class to create an automated config file.
 	 * 
 	 * @param fileName
 	 *            Name of the file.
 	 */
+	public ConfigManager(String fileName, BlockHunt plugin){
+	    this.plugin = plugin;
+        this.fileName = fileName;
+        this.file = new File(this.plugin.getDataFolder(), fileName + ".yml");
+        this.fileLocation = this.plugin.getDataFolder();
+        this.fileC = new YamlConfiguration();
+        this.checkFile();
+        this.fileCS = fileC.getConfigurationSection("");
+        this.load();
+    };
+
 	public ConfigManager(String fileName) {
-		this.fileName = fileName;
-		this.file = new File(BlockHunt.plugin.getDataFolder(), fileName + ".yml");
-		this.fileLocation = BlockHunt.plugin.getDataFolder();
-		this.fileC = new YamlConfiguration();
-		this.checkFile();
-		this.fileCS = fileC.getConfigurationSection("");
-		this.load();
+	    this(fileName,BlockHunt.plugin);
 	}
 
 	/**

@@ -17,7 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class CMDwand extends DefaultCMD {
 
 	@Override
-	public boolean exectue(Player player, Command cmd, String label, String[] args) {
+	public boolean execute(Player player, Command cmd, String label, String[] args) {
 		if (player != null) {
 			ItemStack wand = new ItemStack(Material.getMaterial((String) W.config.get(ConfigC.wandIDname)));
 			ItemMeta im = wand.getItemMeta();

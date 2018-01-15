@@ -23,7 +23,7 @@ public class CMDtokens extends DefaultCMD {
 
 
 	@Override
-	public boolean exectue(Player player, Command cmd, String label, String[] args) {
+	public boolean execute(Player player, Command cmd, String label, String[] args) {
 		if (args.length <= 3) {
 			MessageManager.sendFMessage(player, ConfigC.error_notEnoughArguments, "syntax-" + BlockHunt.CMDtokens.usage);
 		} else {

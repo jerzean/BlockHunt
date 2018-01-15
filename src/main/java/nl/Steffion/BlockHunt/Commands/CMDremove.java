@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 public class CMDremove extends DefaultCMD {
 
 	@Override
-	public boolean exectue(Player player, Command cmd, String label, String[] args) {
+	public boolean execute(Player player, Command cmd, String label, String[] args) {
 		if (player != null) {
 			if (args.length <= 1) {
 				MessageManager.sendFMessage(player, ConfigC.error_notEnoughArguments, "syntax-" + BlockHunt.CMDremove.usage);

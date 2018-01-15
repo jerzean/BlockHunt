@@ -524,7 +524,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
 				if (equals) {
 					if (PermissionsManager.hasPerm(player, command.permission, true)) {
 						if (command.enabled) {
-							command.CMD.exectue(player, cmd, label, args);
+							command.CMD.execute(player, cmd, label, args);
 						} else {
 							MessageManager.sendFMessage(player, ConfigC.error_commandNotEnabled);
 						}

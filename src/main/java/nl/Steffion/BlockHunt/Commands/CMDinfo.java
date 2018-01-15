@@ -21,7 +21,7 @@ public class CMDinfo extends DefaultCMD {
 
 
 	@Override
-	public boolean exectue(Player player, Command cmd, String label, String[] args) {
+	public boolean execute(Player player, Command cmd, String label, String[] args) {
 		MessageManager.sendFMessage(player, ConfigC.chat_headerhigh, "header-" + BlockHunt.pdfFile.getName());
 		MessageManager.sendMessage(player, "%A%name%%N made by %A%autors%%N.", "name-" + BlockHunt.pdfFile.getName(), "autors-" + BlockHunt.pdfFile.getAuthors().get(0));
 		MessageManager.sendMessage(player, "%NVersion: %A%version%%N.", "version-" + BlockHunt.pdfFile.getVersion());

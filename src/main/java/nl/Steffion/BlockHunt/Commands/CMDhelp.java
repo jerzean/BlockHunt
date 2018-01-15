@@ -24,7 +24,7 @@ public class CMDhelp extends DefaultCMD {
 
 
 	@Override
-	public boolean exectue(Player player, Command cmd, String label, String[] args) {
+	public boolean execute(Player player, Command cmd, String label, String[] args) {
 		int amountCommands = 0;
 		for (CommandManager command : W.commands) {
 			if (command.usage != null) {

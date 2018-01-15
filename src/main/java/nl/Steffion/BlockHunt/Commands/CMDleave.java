@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class CMDleave extends DefaultCMD {
 
 	@Override
-	public boolean exectue(Player player, Command cmd, String label, String[] args) {
+	public boolean execute(Player player, Command cmd, String label, String[] args) {
 		if (player != null) {
 			ArenaHandler.playerLeaveArena(player, true, true);
 		} else {

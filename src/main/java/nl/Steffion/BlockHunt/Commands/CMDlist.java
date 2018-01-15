@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 public class CMDlist extends DefaultCMD {
 
 	@Override
-	public boolean exectue(Player player, Command cmd, String label, String[] args) {
+	public boolean execute(Player player, Command cmd, String label, String[] args) {
 		MessageManager.sendFMessage(player, ConfigC.chat_headerhigh, "header-" + BlockHunt.pdfFile.getName());
 		if (W.arenaList.size() >= 1) {
 			MessageManager.sendMessage(player, "&7Available arena(s):");

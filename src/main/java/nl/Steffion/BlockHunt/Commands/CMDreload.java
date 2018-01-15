@@ -24,7 +24,7 @@ public class CMDreload extends DefaultCMD {
 
 
 	@Override
-	public boolean exectue(Player player, Command cmd, String label, String[] args) {
+	public boolean execute(Player player, Command cmd, String label, String[] args) {
 		ConfigManager.newFiles();
 
 		W.config.load();
