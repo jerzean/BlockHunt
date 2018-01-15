@@ -1,0 +1,82 @@
+TestArena:
+  ==: BlockHuntArena
+  maxPlayers: 40
+  hidersWinCommands: []
+  timeInLobbyUntilStart: 30
+  minPlayers: 5
+  timeUntilHidersSword: 0
+  spawnWarp:
+    ==: BlockHuntLocation
+    p: 4.200027
+    a: 41.700073
+    w: games
+    x: -178.5
+    y: 33.0
+    z: -130.5
+  allowedCommands: []
+  arenaName: TestArena
+  amountSeekersOnStart: 3
+  pos1:
+    ==: BlockHuntLocation
+    w: games
+    x: 576.0
+    y: 2.0
+    z: 503.0
+  pos2:
+    ==: BlockHuntLocation
+    w: games
+    x: 428.0
+    y: 66.0
+    z: 342.0
+  waitingTimeSeeker: 20
+  seekersTokenWin: 0
+  lobbyWarp:
+    ==: BlockHuntLocation
+    p: 4.19999
+    a: -182.09694
+    w: games
+    x: 500.66289894368725
+    y: 4.0
+    z: 497.83982348350094
+  seekersWinCommands: []
+  killTokens: 0
+  gameTime: 660
+  disguiseBlocks:
+  - ==: org.bukkit.inventory.ItemStack
+    type: BOOKSHELF
+  - ==: org.bukkit.inventory.ItemStack
+    type: GLOWSTONE
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      enchants:
+        DURABILITY: 10
+  - ==: org.bukkit.inventory.ItemStack
+    type: EMERALD_BLOCK
+  - ==: org.bukkit.inventory.ItemStack
+    type: WOOL
+    damage: 5
+  - ==: org.bukkit.inventory.ItemStack
+    type: ICE
+  - ==: org.bukkit.inventory.ItemStack
+    type: MYCEL
+  - ==: org.bukkit.inventory.ItemStack
+    type: SAND
+  hidersWarp:
+    ==: BlockHuntLocation
+    p: -1.9500121
+    a: 179.85266
+    w: games
+    x: 500.52591580497256
+    y: 4.0
+    z: 482.31326505008246
+  blockAnnouncerTime: 45
+  seekersWarp:
+    ==: BlockHuntLocation
+    p: 17.69996
+    a: 90.15417
+    w: games
+    x: 519.6272528902401
+    y: 42.0
+    z: 453.4140380016035
+  hidersTokenWin: 0
