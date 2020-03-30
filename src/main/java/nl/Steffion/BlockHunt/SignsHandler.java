@@ -92,7 +92,7 @@ public class SignsHandler {
 		MemoryStorage.signs.load();
 		for (String sign : MemoryStorage.signs.getFile().getKeys(false)) {
 			Location loc = (Location) MemoryStorage.signs.getFile().get(sign + ".location");
-			if (loc.getBlock().getType().equals(Material.SIGN) || loc.getBlock().getType().equals(Material.WALL_SIGN)) {
+			if (loc.getBlock().getState() instanceof Sign) {
 				Sign signblock = (Sign) loc.getBlock().getState();
 				String[] lines = signblock.getLines();
 				if (sign.contains("leave")) {

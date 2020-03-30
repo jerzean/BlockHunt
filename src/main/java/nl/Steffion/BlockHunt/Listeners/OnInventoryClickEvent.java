@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 public class OnInventoryClickEvent implements Listener {
@@ -31,8 +32,9 @@ public class OnInventoryClickEvent implements Listener {
 		}
 
 		Inventory inv = event.getInventory();
+		InventoryView invView = event.getView();
 		if (inv.getType().equals(InventoryType.CHEST)) {
-			if (inv.getName().contains("DisguiseBlocks")) {
+			if (invView.getTitle().contains("DisguiseBlocks")) {
 				if (event.getCurrentItem() != null) {
 					if (!event.getCurrentItem().getType().isBlock()) {
 						if (!event.getCurrentItem().getType().equals(Material.FLOWER_POT)) {
@@ -46,11 +48,11 @@ public class OnInventoryClickEvent implements Listener {
 			}
 
 			// Early exit if this isnt a blockhunt inventory
-			if (!inv.getName().contains("BlockHunt"))
+			if (!invView.getTitle().contains("BlockHunt"))
 				return;
 
-			if (inv.getName().startsWith("\u00A7r")) {
-				if (inv.getName().equals(MessageManager.replaceAll("\u00A7r" + MemoryStorage.config.get(ConfigC.shop_title)))) {
+			if (invView.getTitle().startsWith("\u00A7r")) {
+				if (invView.getTitle().equals(MessageManager.replaceAll("\u00A7r" + MemoryStorage.config.get(ConfigC.shop_title)))) {
 					event.setCancelled(true);
 					ItemStack item = event.getCurrentItem();
 					if (MemoryStorage.shop.getFile().get(player.getName() + ".tokens") == null) {
@@ -90,7 +92,7 @@ public class OnInventoryClickEvent implements Listener {
 					}
 
 					InventoryHandler.openShop(player);
-				} else if (inv.getName().contains(MessageManager.replaceAll((String) MemoryStorage.config.get(ConfigC.shop_blockChooserv1Name)))) {
+				} else if (invView.getTitle().contains(MessageManager.replaceAll((String) MemoryStorage.config.get(ConfigC.shop_blockChooserv1Name)))) {
 					event.setCancelled(true);
 					if (event.getCurrentItem().getType() != Material.AIR) {
 						if (event.getCurrentItem().getType().isBlock()) {
@@ -101,7 +103,7 @@ public class OnInventoryClickEvent implements Listener {
 							MessageManager.sendFMessage(player, ConfigC.error_setNotABlock);
 						}
 					}
-				} else if (inv.getName().contains(MessageManager.replaceAll((String) MemoryStorage.config.get(ConfigC.shop_BlockHuntPassv2Name)))) {
+				} else if (invView.getTitle().contains(MessageManager.replaceAll((String) MemoryStorage.config.get(ConfigC.shop_BlockHuntPassv2Name)))) {
 					event.setCancelled(true);
 					if (event.getCurrentItem().getType() != Material.AIR) {
 						if (event.getCurrentItem().getType().equals(Material.BLUE_WOOL)) {

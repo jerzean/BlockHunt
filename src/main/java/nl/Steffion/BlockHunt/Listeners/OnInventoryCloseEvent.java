@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 public class OnInventoryCloseEvent implements Listener {
@@ -21,8 +22,9 @@ public class OnInventoryCloseEvent implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onInventoryCloseEvent(InventoryCloseEvent event) {
 		Inventory inv = event.getInventory();
+		InventoryView invView = event.getView();
 		if (inv.getType().equals(InventoryType.CHEST)) {
-			if (inv.getName().contains("DisguiseBlocks")) {
+			if (invView.getTitle().contains("DisguiseBlocks")) {
 				String arenaname = inv.getItem(0).getItemMeta().getDisplayName().replaceAll(MessageManager.replaceAll("%NDisguiseBlocks of arena: %A"), "");
 
 				Arena arena = null;
