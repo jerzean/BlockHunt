@@ -71,7 +71,7 @@ public class ConfigManager {
 	public static void newFiles() {
 		ConfigManager.setDefaults();
 		for (String fileName : MemoryStorage.newFiles) {
-			MessageManager.sendMessage(null, "%TAG%WCouldn't find '%A%fileName%.yml%MemoryStorage' creating new one.", "fileName-" + fileName);
+			MessageManager.sendMessage(null, "%TAG%WCouldn't find '%A%fileName%.yml%W'%A creating new one.", "fileName-" + fileName);
 		}
 
 		MemoryStorage.newFiles.clear();

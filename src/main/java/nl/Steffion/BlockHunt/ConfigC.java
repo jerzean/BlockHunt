@@ -81,7 +81,7 @@ public enum ConfigC {
 			"%TAG%NYou've bought the '%A%itemname%%N' item!", MemoryStorage.messages), normal_shopChoosenBlock("%TAG%NYou've choosen to be a(n) '%A%block%%N' block!", MemoryStorage.messages), normal_shopChoosenSeeker(
 			"%TAG%NYou've choosen to be a %Aseeker%N!", MemoryStorage.messages), normal_shopChoosenHiders("%TAG%NYou've choosen to be a %Ahider%N!", MemoryStorage.messages), normal_ingameBlocksLeft("%TAG%NRemaining blocks: %A%1%%N", MemoryStorage.messages),
 
-	warning_lobbyNeedAtleast("%TAG%WYou need atleast %A%1%%MemoryStorage player(s) to start the game!", MemoryStorage.messages), warning_ingameNEWSeekerChoosen(
+	warning_lobbyNeedAtleast("%TAG%WYou need atleast %A%1% player(s) to start the game!", MemoryStorage.messages), warning_ingameNEWSeekerChoosen(
 			"%TAG%WThe last seeker left and a new seeker has been choosen!", MemoryStorage.messages), warning_unableToCommand(
 			"%TAG%WSorry but that command is disabled in the arena.", MemoryStorage.messages), warning_ingameNoSolidPlace("%TAG%WThat's not a valid place to become solid!",
 			MemoryStorage.messages), warning_arenaStopped("%TAG%WThe arena has been forced to stop!", MemoryStorage.messages),
