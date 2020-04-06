@@ -184,7 +184,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
 
 		ArenaHandler.loadArenas();
 
-		MessageManager.sendFMessage(null, ConfigC.log_enabledPlugin, "name-" + BlockHunt.pdfFile.getName(), "version-" + BlockHunt.pdfFile.getVersion(), "autors-"
+		MessageManager.sendFMessage(null, ConfigC.log_enabledPlugin, "name-" + BlockHunt.pdfFile.getName(), "version-" + BlockHunt.pdfFile.getVersion(), "authors-"
 				+ BlockHunt.pdfFile.getAuthors().get(0));
 
 		// Welcome to the massive game loop!!
@@ -465,7 +465,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
 			ArenaHandler.stopArena(arena, cause, ConfigC.warning_arenaStopped);
 		}
 
-		MessageManager.sendFMessage(null, ConfigC.log_disabledPlugin, "name-" + BlockHunt.pdfFile.getName(), "version-" + BlockHunt.pdfFile.getVersion(), "autors-"
+		MessageManager.sendFMessage(null, ConfigC.log_disabledPlugin, "name-" + BlockHunt.pdfFile.getName(), "version-" + BlockHunt.pdfFile.getVersion(), "authors-"
 				+ BlockHunt.pdfFile.getAuthors().get(0));
 	}
 

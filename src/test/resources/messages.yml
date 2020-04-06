@@ -1,6 +1,6 @@
 log:
-  enabledPlugin: '%TAG%N%name%&a&k + %N%version% is now Enabled. Made by %A%autors%%N.'
-  disabledPlugin: '%TAG%N%name%&c&k - %N%version% is now Disabled. Made by %A%autors%%N.'
+  enabledPlugin: '%TAG%N%name%&a&k + %N%version% is now Enabled. Made by %A%authors%%N.'
+  disabledPlugin: '%TAG%N%name%&c&k - %N%version% is now Disabled. Made by %A%authors%%N.'
 help:
   info: '%NDisplays the plugin''s info.'
   help: '%NShows a list of commands.'

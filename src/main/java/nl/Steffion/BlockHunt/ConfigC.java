@@ -50,8 +50,8 @@ public enum ConfigC {
 
 	requireInventoryClearOnJoin(false, MemoryStorage.config),
 
-	log_enabledPlugin("%TAG%N%name%&a&k + %N%version% is now Enabled. Made by %A%autors%%N.", MemoryStorage.messages), log_disabledPlugin(
-			"%TAG%N%name%&c&k - %N%version% is now Disabled. Made by %A%autors%%N.", MemoryStorage.messages),
+	log_enabledPlugin("%TAG%N%name%&a&k + %N%version% is now Enabled. Made by %A%authors%%N.", MemoryStorage.messages), log_disabledPlugin(
+			"%TAG%N%name%&c&k - %N%version% is now Disabled. Made by %A%authors%%N.", MemoryStorage.messages),
 
 	help_info("%NDisplays the plugin's info.", MemoryStorage.messages), help_help("%NShows a list of commands.", MemoryStorage.messages), help_reload("%NReloads all configs.", MemoryStorage.messages), help_join(
 			"%NJoins a " + BlockHunt.pdfFile.getName() + " game.", MemoryStorage.messages), help_leave("%NLeave a " + BlockHunt.pdfFile.getName() + " game.", MemoryStorage.messages), help_list(
