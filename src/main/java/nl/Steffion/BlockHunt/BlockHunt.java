@@ -324,7 +324,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
                     if (arena.timer > 0) {
                         if (arena.timer == arena.gameTime - arena.timeUntilHidersSword) {
                             ItemStack sword = new ItemStack(Material.WOODEN_SWORD, 1);
-                            sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
+                            sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
                             for (Player arenaPlayer : arena.playersInArena) {
                                 if (!arena.seekers.contains(arenaPlayer)) {
                                     arenaPlayer.getInventory().addItem(sword);

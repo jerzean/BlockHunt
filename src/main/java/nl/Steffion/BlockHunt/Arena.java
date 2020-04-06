@@ -160,7 +160,7 @@ public class Arena implements ConfigurationSerializable {
 				(Integer) map.getOrDefault("timeUntilHidersSword", 30),
 				(Integer) map.getOrDefault("blockAnnouncerTime", 45),
 				(Boolean) map.getOrDefault("seekersCanHurtSeekers", false),
-				(Boolean) map.getOrDefault("hidersCanHurtSeekers", false),
+				(Boolean) map.getOrDefault("hidersCanHurtSeekers", true),
 				(Boolean) map.getOrDefault("hidersCanHurtHiders", false),
 				(Boolean) map.getOrDefault("seekersTakeFallDamage", false),
 				(Boolean) map.getOrDefault("hidersTakeFallDamage", false),
