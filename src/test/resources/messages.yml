@@ -60,7 +60,7 @@ normal:
   shopChoosenHiders: '%TAG%NYou''ve choosen to be a %Ahider%N!'
   ingameBlocksLeft: '%TAG%NRemaining blocks: %A%1%%N'
 warning:
-  lobbyNeedAtleast: '%TAG%WYou need atleast %A%1%%MemoryStorage player(s) to start the game!'
+  lobbyNeedAtleast: '%TAG%WYou need atleast %A%1% player(s) to start the game!'
   ingameNEWSeekerChoosen: '%TAG%WThe last seeker left and a new seeker has been choosen!'
   unableToCommand: '%TAG%WSorry but that command is disabled in the arena.'
   ingameNoSolidPlace: '%TAG%WThat''s not a valid place to become solid!'
