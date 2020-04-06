@@ -82,7 +82,6 @@ public class Arena implements ConfigurationSerializable {
 		this.seekersTokenWin = seekersTokenWin;
 		this.hidersTokenWin = hidersTokenWin;
 		this.killTokens = killTokens;
-
 		this.playersInArena = playersInArena;
 		this.gameState = gameState;
 		this.timer = timer;
@@ -123,9 +122,14 @@ public class Arena implements ConfigurationSerializable {
 		map.put("amountSeekersOnStart", amountSeekersOnStart);
 		map.put("timeInLobbyUntilStart", timeInLobbyUntilStart);
 		map.put("waitingTimeSeeker", waitingTimeSeeker);
-		map.put("blockAnnouncerTime", blockAnnouncerTime);
 		map.put("gameTime", gameTime);
 		map.put("timeUntilHidersSword", timeUntilHidersSword);
+		map.put("blockAnnouncerTime", blockAnnouncerTime);
+		map.put("seekersCanHurtSeekers", seekersCanHurtSeekers);
+		map.put("hidersCanHurtSeekers", hidersCanHurtSeekers);
+		map.put("hidersCanHurtHiders", hidersCanHurtHiders);
+		map.put("seekersTakeFallDamage", seekersTakeFallDamage);
+		map.put("hidersTakeFallDamage", hidersTakeFallDamage);
 		map.put("disguiseBlocks", disguiseBlocks);
 		map.put("lobbyWarp", lobbyWarp);
 		map.put("hidersWarp", hidersWarp);
@@ -143,14 +147,35 @@ public class Arena implements ConfigurationSerializable {
 	@SuppressWarnings("unchecked")
 	public static Arena deserialize(Map<String, Object> map) {
 		Location loc = new Location(Bukkit.getWorld("world"), 0, 0, 0, 0, 0);
-		return new Arena((String) map.getOrDefault("arenaName", "UNKNOWN_NAME"), (Location) map.getOrDefault("pos1", loc), (Location) map.getOrDefault( "pos2", loc),
-				(Integer) map.getOrDefault( "maxPlayers", 12), (Integer) map.getOrDefault( "minPlayers", 3), (Integer) map.getOrDefault( "amountSeekersOnStart", 1), (Integer) map.getOrDefault( "timeInLobbyUntilStart", 90),
-				(Integer) map.getOrDefault( "waitingTimeSeeker", 20), (Integer) map.getOrDefault( "gameTime", 200), (Integer) map.getOrDefault( "timeUntilHidersSword", 30),(Integer) map.getOrDefault( "blockAnnouncerTime", 45),
-				(Boolean) map.getOrDefault( "seekersCanHurtSeekers", false),(Boolean) map.getOrDefault( "hidersCanHurtSeekers", false),(Boolean) map.getOrDefault( "hidersCanHurtHiders", false),(Boolean) map.getOrDefault( "seekersTakeFallDamage", false),(Boolean) map.getOrDefault( "hidersTakeFallDamage", false),
-				(ArrayList<ItemStack>) map.getOrDefault( "disguiseBlocks", new ArrayList<ItemStack>()),(Location) map.getOrDefault( "lobbyWarp", loc), (Location) map.getOrDefault( "hidersWarp", loc), (Location) map.getOrDefault( "seekersWarp", loc),
-				(Location) map.getOrDefault( "spawnWarp", loc), (ArrayList<String>) map.getOrDefault( "seekersWinCommands", new ArrayList<String>()),
-				(ArrayList<String>) map.getOrDefault("hidersWinCommands", new ArrayList<String>()), (ArrayList<String>) map.getOrDefault( "allowedCommands", new ArrayList<String>()),
-				(Integer) map.getOrDefault( "seekersTokenWin", 10), (Integer) map.getOrDefault( "hidersTokenWin", 50), (Integer) map.getOrDefault( "killTokens", 8), new ArrayList<>(),
-				ArenaState.WAITING, 0, new ArrayList<>(), Bukkit.getScoreboardManager().getNewScoreboard());
+		return new Arena(
+				(String) map.getOrDefault("arenaName", "UNKNOWN_NAME"),
+				(Location) map.getOrDefault("pos1", loc),
+				(Location) map.getOrDefault("pos2", loc),
+				(Integer) map.getOrDefault("maxPlayers", 12),
+				(Integer) map.getOrDefault("minPlayers", 3),
+				(Integer) map.getOrDefault("amountSeekersOnStart", 1),
+				(Integer) map.getOrDefault("timeInLobbyUntilStart", 90),
+				(Integer) map.getOrDefault("waitingTimeSeeker", 20),
+				(Integer) map.getOrDefault("gameTime", 200),
+				(Integer) map.getOrDefault("timeUntilHidersSword", 30),
+				(Integer) map.getOrDefault("blockAnnouncerTime", 45),
+				(Boolean) map.getOrDefault("seekersCanHurtSeekers", false),
+				(Boolean) map.getOrDefault("hidersCanHurtSeekers", false),
+				(Boolean) map.getOrDefault("hidersCanHurtHiders", false),
+				(Boolean) map.getOrDefault("seekersTakeFallDamage", false),
+				(Boolean) map.getOrDefault("hidersTakeFallDamage", false),
+				(ArrayList<ItemStack>) map.getOrDefault("disguiseBlocks", new ArrayList<ItemStack>()),
+				(Location) map.getOrDefault("lobbyWarp", loc),
+				(Location) map.getOrDefault("hidersWarp", loc),
+				(Location) map.getOrDefault("seekersWarp", loc),
+				(Location) map.getOrDefault("spawnWarp", loc),
+				(ArrayList<String>) map.getOrDefault("seekersWinCommands", new ArrayList<String>()),
+				(ArrayList<String>) map.getOrDefault("hidersWinCommands", new ArrayList<String>()),
+				(ArrayList<String>) map.getOrDefault("allowedCommands", new ArrayList<String>()),
+				(Integer) map.getOrDefault("seekersTokenWin", 10),
+				(Integer) map.getOrDefault("hidersTokenWin", 50),
+				(Integer) map.getOrDefault("killTokens", 8),
+				new ArrayList<>(), ArenaState.WAITING, 0, new ArrayList<>(), Bukkit.getScoreboardManager().getNewScoreboard()
+		);
 	}
 }
