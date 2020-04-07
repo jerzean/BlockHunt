@@ -295,6 +295,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
 
                 for (Player player : arena.seekers) {
                     if (player.getInventory().getItem(0) == null || player.getInventory().getItem(0).getType() != Material.DIAMOND_SWORD) {
+                        player.getInventory().clear(); // semi prevent duping infinite swords. TODO: Fix this properly
                         ItemStack i = new ItemStack(Material.DIAMOND_SWORD, 1);
                         i.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 10);
                         player.getInventory().setItem(0, i);
