@@ -94,7 +94,7 @@ public class OnInventoryClickEvent implements Listener {
 					InventoryHandler.openShop(player);
 				} else if (invView.getTitle().contains(MessageManager.replaceAll((String) MemoryStorage.config.get(ConfigC.shop_blockChooserv1Name)))) {
 					event.setCancelled(true);
-					if (event.getCurrentItem().getType() != Material.AIR) {
+					if (event.getCurrentItem() != null) {
 						if (event.getCurrentItem().getType().isBlock()) {
 							MemoryStorage.choosenBlock.put(player, event.getCurrentItem());
 							MessageManager.sendFMessage(player, ConfigC.normal_shopChoosenBlock, "block-"
@@ -105,7 +105,7 @@ public class OnInventoryClickEvent implements Listener {
 					}
 				} else if (invView.getTitle().contains(MessageManager.replaceAll((String) MemoryStorage.config.get(ConfigC.shop_BlockHuntPassv2Name)))) {
 					event.setCancelled(true);
-					if (event.getCurrentItem().getType() != Material.AIR) {
+					if (event.getCurrentItem() != null) {
 						if (event.getCurrentItem().getType().equals(Material.BLUE_WOOL)) {
 							int i = 0;
 							for (Arena arena : MemoryStorage.arenaList) {
