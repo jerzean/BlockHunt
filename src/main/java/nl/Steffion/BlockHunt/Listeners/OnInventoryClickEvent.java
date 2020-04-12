@@ -5,6 +5,7 @@ import nl.Steffion.BlockHunt.Arena.ArenaType;
 import nl.Steffion.BlockHunt.MemoryStorage;
 import nl.Steffion.BlockHunt.Managers.MessageManager;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -97,8 +98,10 @@ public class OnInventoryClickEvent implements Listener {
 					if (event.getCurrentItem() != null) {
 						if (event.getCurrentItem().getType().isBlock()) {
 							MemoryStorage.choosenBlock.put(player, event.getCurrentItem());
+							String blockName = event.getCurrentItem().getType().name();
+							blockName = WordUtils.capitalizeFully(blockName.replace("_", " "));
 							MessageManager.sendFMessage(player, ConfigC.normal_shopChoosenBlock, "block-"
-									+ event.getCurrentItem().getType().toString().replaceAll("_", "").replaceAll("BLOCK", "").toLowerCase());
+									+ blockName);
 						} else {
 							MessageManager.sendFMessage(player, ConfigC.error_setNotABlock);
 						}

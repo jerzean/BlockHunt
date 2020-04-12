@@ -48,6 +48,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -280,14 +281,10 @@ public class BlockHunt extends JavaPlugin implements Listener {
                                 arenaPlayer.getInventory().setItem(8, blockCount);
                                 arenaPlayer.getInventory().setHelmet(new ItemStack(block));
                                 MemoryStorage.pBlock.put(arenaPlayer, block);
-
-                                if (block.getDurability() != 0) {
-                                    MessageManager.sendFMessage(arenaPlayer, ConfigC.normal_ingameBlock,
-                                            "block-" + block.getType().name().replaceAll("_", "").replaceAll("BLOCK", "").toLowerCase() + ":" + block.getDurability());
-                                } else {
-                                    MessageManager.sendFMessage(arenaPlayer, ConfigC.normal_ingameBlock,
-                                            "block-" + block.getType().name().replaceAll("_", "").replaceAll("BLOCK", "").toLowerCase());
-                                }
+                                String blockName = block.getType().name();
+                                blockName = WordUtils.capitalizeFully(blockName.replace("_", " "));
+                                MessageManager.sendFMessage(arenaPlayer, ConfigC.normal_ingameBlock,
+                                        "block-" + blockName);
                             }
                         }
                     }
@@ -399,9 +396,10 @@ public class BlockHunt extends JavaPlugin implements Listener {
                                         block.setAmount(block.getAmount() - 1);
                                     } else {
                                         Block pBlock = player.getLocation().getBlock();
-                                        if (pBlock.getType().equals(Material.AIR) || pBlock.getType().equals(Material.WATER)
-                                                || pBlock.getType().equals(Material.WATER)) {
-                                            if (pBlock.getType().equals(Material.WATER) || pBlock.getType().equals(Material.WATER)) {
+                                        BlockData pBlockData = pBlock.getBlockData();
+                                        if (pBlockData.getMaterial().equals(Material.AIR) || pBlockData.getMaterial().equals(Material.WATER)
+                                                || pBlockData.getMaterial().equals(Material.WATER)) {
+                                            if (pBlockData.getMaterial().equals(Material.WATER) || pBlockData.getMaterial().equals(Material.WATER)) {
                                                 MemoryStorage.hiddenLocWater.put(player, true);
                                             } else {
                                                 MemoryStorage.hiddenLocWater.put(player, false);
@@ -411,28 +409,22 @@ public class BlockHunt extends JavaPlugin implements Listener {
                                                 for (Player pl : Bukkit.getOnlinePlayers()) {
                                                     if (!pl.equals(player)) {
                                                         pl.hidePlayer(player);
-                                                        pl.sendBlockChange(pBlock.getLocation(), block.getType(), (byte) block.getDurability());
+                                                        pl.sendBlockChange(pBlock.getLocation(), block.getType().createBlockData());
                                                     }
                                                 }
 
                                                 block.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
                                                 player.playSound(pLoc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
                                                 MemoryStorage.hiddenLoc.put(player, moveLoc);
-                                                if (block.getDurability() != 0) {
-                                                    MessageManager.sendFMessage(
-                                                            player,
-                                                            ConfigC.normal_ingameNowSolid,
-                                                            "block-" + block.getType().name().replaceAll("_", "").replaceAll("BLOCK", "").toLowerCase() + ":"
-                                                                    + block.getDurability());
-                                                } else {
-                                                    MessageManager.sendFMessage(player, ConfigC.normal_ingameNowSolid, "block-"
-                                                            + block.getType().name().replaceAll("_", "").replaceAll("BLOCK", "").toLowerCase());
-                                                }
+                                                String blockName = block.getType().name();
+                                                blockName = WordUtils.capitalizeFully(blockName.replace("_", " "));
+                                                MessageManager.sendFMessage(player, ConfigC.normal_ingameNowSolid, "block-"
+                                                        + blockName);
                                             }
                                             for (Player pl : Bukkit.getOnlinePlayers()) {
                                                 if (!pl.equals(player)) {
                                                     pl.hidePlayer(player);
-                                                    pl.sendBlockChange(pBlock.getLocation(), block.getType(), (byte) block.getDurability());
+                                                    pl.sendBlockChange(pBlock.getLocation(), block.getType().createBlockData());
                                                 }
                                             }
                                         } else {
