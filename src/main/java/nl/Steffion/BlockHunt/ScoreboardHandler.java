@@ -19,11 +19,11 @@ public class ScoreboardHandler {
 				return;
 			}
 
-			Objective object = board.registerNewObjective(BlockHunt.cutString(arena.arenaName, 32), "dummy");
+			String displayName = BlockHunt.cutString(MessageManager.replaceAll((String) MemoryStorage.config.get(ConfigC.scoreboard_title)), 32);
+			Objective object = board.registerNewObjective(BlockHunt.cutString(arena.arenaName, 32), "dummy", displayName);
 
 			object.setDisplaySlot(DisplaySlot.SIDEBAR);
-			object.setDisplayName(BlockHunt.cutString(MessageManager.replaceAll((String) MemoryStorage.config.get(ConfigC.scoreboard_title)), 32));
-			
+
 			String temp = BlockHunt.cutString(MessageManager.replaceAll((String) MemoryStorage.config.get(ConfigC.scoreboard_timeleft)), 32);
 			Score timeleft = object.getScore(temp);
 			timeleft.setScore(arena.timer);

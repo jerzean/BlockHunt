@@ -126,7 +126,7 @@ public class OnInventoryClickEvent implements Listener {
 									MessageManager.sendFMessage(player, ConfigC.error_shopMaxSeekersReached);
 								} else {
 									MemoryStorage.choosenSeeker.put(player, true);
-									player.getInventory().setItemInHand(new ItemStack(Material.AIR));
+									player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
 									player.updateInventory();
 									MessageManager.sendFMessage(player, ConfigC.normal_shopChoosenSeeker);
 									inv.clear();
@@ -157,7 +157,7 @@ public class OnInventoryClickEvent implements Listener {
 									MessageManager.sendFMessage(player, ConfigC.error_shopMaxHidersReached);
 								} else {
 									MemoryStorage.choosenSeeker.put(player, false);
-									player.getInventory().setItemInHand(new ItemStack(Material.AIR));
+									player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
 									player.updateInventory();
 									MessageManager.sendFMessage(player, ConfigC.normal_shopChoosenHiders);
 									inv.clear();

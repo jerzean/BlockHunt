@@ -51,10 +51,10 @@ public class SolidBlockHandler {
 		block.removeEnchantment(Enchantment.DURABILITY);
 
 		for (Player playerShow : Bukkit.getOnlinePlayers()) {
-			playerShow.showPlayer(player);
+			playerShow.showPlayer(BlockHunt.plugin, player);
 		}
 
-		MiscDisguise disguise = new MiscDisguise(DisguiseType.FALLING_BLOCK, block.getType(), 0);
+		MiscDisguise disguise = new MiscDisguise(DisguiseType.FALLING_BLOCK, block.getType());
 		DisguiseAPI.disguiseToAll(player, disguise);
 
 		MessageManager.sendFMessage(player, ConfigC.normal_ingameNoMoreSolid);

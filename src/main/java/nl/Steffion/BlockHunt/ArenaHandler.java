@@ -130,14 +130,14 @@ public class ArenaHandler {
 									// they join
 									for (Player otherplayer : arena.playersInArena) {
 										if (otherplayer.canSee(player))
-											otherplayer.showPlayer(player); // Make
+											otherplayer.showPlayer(BlockHunt.plugin, player); // Make
 																			// new
 																			// player
 																			// visible
 																			// to
 																			// others
 										if (player.canSee(otherplayer))
-											player.showPlayer(otherplayer); // Make
+											player.showPlayer(BlockHunt.plugin, otherplayer); // Make
 																			// other
 																			// players
 																			// visible
@@ -263,7 +263,7 @@ public class ArenaHandler {
 					ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameSeekerChoosen, "seeker-" + seeker.getName());
 					DisguiseAPI.undisguiseToAll(seeker);
 					for (Player pl : Bukkit.getOnlinePlayers()) {
-						pl.showPlayer(seeker);
+						pl.showPlayer(BlockHunt.plugin, seeker);
 					}
 					seeker.getInventory().clear();
 					arena.seekers.add(seeker);
@@ -274,10 +274,10 @@ public class ArenaHandler {
 					// Fix for client not showing players after they join
 					for (Player otherplayer : arena.playersInArena) {
 						if (otherplayer.canSee(player))
-							otherplayer.showPlayer(player); // Make new player
+							otherplayer.showPlayer(BlockHunt.plugin, player); // Make new player
 															// visible to others
 						if (player.canSee(otherplayer))
-							player.showPlayer(otherplayer); // Make other
+							player.showPlayer(BlockHunt.plugin, otherplayer); // Make other
 															// players visible
 															// to new player
 					}
@@ -311,7 +311,7 @@ public class ArenaHandler {
 			MemoryStorage.pData.remove(player);
 
 			for (Player pl : Bukkit.getOnlinePlayers()) {
-				pl.showPlayer(player);
+				pl.showPlayer(BlockHunt.plugin, player);
 				if (MemoryStorage.hiddenLoc.get(player) != null) {
 					if (MemoryStorage.hiddenLocWater.get(player) != null) {
 						Block pBlock = MemoryStorage.hiddenLoc.get(player).getBlock();

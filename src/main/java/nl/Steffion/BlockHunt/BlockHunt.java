@@ -271,13 +271,10 @@ public class BlockHunt extends JavaPlugin implements Listener {
                                     MemoryStorage.choosenBlock.remove(arenaPlayer);
                                 }
 
-                                MiscDisguise disguise = new MiscDisguise(DisguiseType.FALLING_BLOCK, block.getType(),0);
+                                MiscDisguise disguise = new MiscDisguise(DisguiseType.FALLING_BLOCK, block.getType());
                                 DisguiseAPI.disguiseToAll(arenaPlayer, disguise);
-
                                 arenaPlayer.teleport(arena.hidersWarp);
-
                                 ItemStack blockCount = new ItemStack(block.getType(), 5);
-                                blockCount.setDurability(block.getDurability());
                                 arenaPlayer.getInventory().setItem(8, blockCount);
                                 arenaPlayer.getInventory().setHelmet(new ItemStack(block));
                                 MemoryStorage.pBlock.put(arenaPlayer, block);
@@ -408,7 +405,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
                                                 DisguiseAPI.undisguiseToAll(player);
                                                 for (Player pl : Bukkit.getOnlinePlayers()) {
                                                     if (!pl.equals(player)) {
-                                                        pl.hidePlayer(player);
+                                                        pl.hidePlayer(this, player);
                                                         pl.sendBlockChange(pBlock.getLocation(), block.getType().createBlockData());
                                                     }
                                                 }
@@ -423,7 +420,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
                                             }
                                             for (Player pl : Bukkit.getOnlinePlayers()) {
                                                 if (!pl.equals(player)) {
-                                                    pl.hidePlayer(player);
+                                                    pl.hidePlayer(this, player);
                                                     pl.sendBlockChange(pBlock.getLocation(), block.getType().createBlockData());
                                                 }
                                             }
@@ -530,7 +527,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
 				}
 			}
 		}
-		new CMDnotfound().execute(player,cmd,label, args);;
+		new CMDnotfound().execute(player,cmd,label, args);
 		return true;
 	}
 

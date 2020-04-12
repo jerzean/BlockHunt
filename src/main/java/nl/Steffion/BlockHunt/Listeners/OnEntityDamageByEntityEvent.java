@@ -8,6 +8,7 @@ import me.libraryaddict.disguise.DisguiseAPI;
 import nl.Steffion.BlockHunt.Arena;
 import nl.Steffion.BlockHunt.Arena.ArenaState;
 import nl.Steffion.BlockHunt.ArenaHandler;
+import nl.Steffion.BlockHunt.BlockHunt;
 import nl.Steffion.BlockHunt.ConfigC;
 import nl.Steffion.BlockHunt.MemoryStorage;
 import nl.Steffion.BlockHunt.Managers.MessageManager;
@@ -154,9 +155,9 @@ public class OnEntityDamageByEntityEvent implements Listener {
 							// Fix for client not showing players after they join
 							for (Player otherplayer : arena.playersInArena) {
 								if (otherplayer.canSee(player))
-									otherplayer.showPlayer(player); // Make new player visible to others
+									otherplayer.showPlayer(BlockHunt.plugin, player); // Make new player visible to others
 								if (player.canSee(otherplayer))
-									player.showPlayer(otherplayer); // Make other players visible to new player
+									player.showPlayer(BlockHunt.plugin, otherplayer); // Make other players visible to new player
 							}
 						}
 					}
