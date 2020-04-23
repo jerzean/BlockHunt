@@ -27,7 +27,8 @@ public class OnPlayerTeleportEvent implements Listener {
 	 */
 	private void handlePlayer(PlayerTeleportEvent event, Player player) {
 		Location storedLoc = MemoryStorage.teleportLoc.remove(player);
-		if (storedLoc == null || event.getTo().distanceSquared(storedLoc) > 1) {
+		Location to = event.getTo();
+		if (storedLoc == null || storedLoc.getWorld() != to.getWorld() || to.distanceSquared(storedLoc) > 1) {
 			MessageManager.sendFMessage(player, ConfigC.error_teleportBlocked);
 			event.setCancelled(true);
 		}
