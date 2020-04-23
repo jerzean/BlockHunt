@@ -96,6 +96,13 @@ public class ArenaHandler {
 											return;
 										}
 									}
+
+									boolean canWarp = PlayerHandler.teleport(player, arena.lobbyWarp);
+									if (!canWarp) {
+										MessageManager.sendFMessage(player, ConfigC.error_teleportFailed);
+										return;
+									}
+
 									System.out.println("[BlockHunt] " + player.getName() + " has joined " + arenaname);
 									arena.playersInArena.add(player);
 									JoinArenaEvent event = new JoinArenaEvent(player, arena);
@@ -107,7 +114,6 @@ public class ArenaHandler {
 
 									MemoryStorage.pData.put(player, pad);
 
-									PlayerHandler.teleport(player, arena.lobbyWarp);
 									player.setGameMode(GameMode.SURVIVAL);
 									for (PotionEffect pe : player.getActivePotionEffects()) {
 										player.removePotionEffect(pe.getType());
