@@ -103,7 +103,9 @@ public enum ConfigC {
 			"%TAG%ENo player found with the name '%A%playername%%E'!", MemoryStorage.messages), error_tokensUnknownsetting("%TAG%E'%A%option%%E' is not a known option!", MemoryStorage.messages), error_shopNeedMoreTokens(
 			"%TAG%EYou need more tokens before you can buy this item.", MemoryStorage.messages), error_shopMaxSeekersReached(
 			"%TAG%ESorry, the maximum amount of seekers has been reached!", MemoryStorage.messages), error_shopMaxHidersReached(
-			"%TAG%ESorry, the maximum amount of hiders has been reached!", MemoryStorage.messages);
+			"%TAG%ESorry, the maximum amount of hiders has been reached!", MemoryStorage.messages),
+	error_teleportFailed("%TAG%EUnable to teleport you into the arena.", MemoryStorage.messages),
+	error_teleportBlocked("%TAG%EYou cannot teleport while playing!", MemoryStorage.messages);
 
 	public Object value;
 	public ConfigManager config;
@@ -111,7 +113,7 @@ public enum ConfigC {
 
 	/**
 	 * Makes an object from the list above.
-	 * 
+	 *
 	 * @param value
 	 *            Setting in the config file.
 	 * @param config

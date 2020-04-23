@@ -96,6 +96,13 @@ public class ArenaHandler {
 											return;
 										}
 									}
+
+									boolean canWarp = PlayerHandler.teleport(player, arena.lobbyWarp);
+									if (!canWarp) {
+										MessageManager.sendFMessage(player, ConfigC.error_teleportFailed);
+										return;
+									}
+
 									System.out.println("[BlockHunt] " + player.getName() + " has joined " + arenaname);
 									arena.playersInArena.add(player);
 									JoinArenaEvent event = new JoinArenaEvent(player, arena);
@@ -107,7 +114,6 @@ public class ArenaHandler {
 
 									MemoryStorage.pData.put(player, pad);
 
-									player.teleport(arena.lobbyWarp);
 									player.setGameMode(GameMode.SURVIVAL);
 									for (PotionEffect pe : player.getActivePotionEffects()) {
 										player.removePotionEffect(pe.getType());
@@ -267,7 +273,7 @@ public class ArenaHandler {
 					}
 					seeker.getInventory().clear();
 					arena.seekers.add(seeker);
-					seeker.teleport(arena.seekersWarp);
+					PlayerHandler.teleport(seeker, arena.seekersWarp);
 					MemoryStorage.seekertime.put(seeker, arena.waitingTimeSeeker);
 					seeker.setWalkSpeed(0.3F);
 
@@ -300,7 +306,7 @@ public class ArenaHandler {
 			player.setHealth(pad.pHealth);
 			player.setFoodLevel(pad.pFood);
 			player.addPotionEffects(pad.pPotionEffects);
-			player.teleport(arena.spawnWarp);
+			PlayerHandler.teleport(player, arena.spawnWarp);
 			player.setGameMode(pad.pGameMode);
 			player.setAllowFlight(pad.pFlying);
 			if (player.getAllowFlight()) {
@@ -434,7 +440,7 @@ public class ArenaHandler {
 		arena.timer = 0;
 		arena.playersInArena.clear();
 	}
-	
+
 	public static boolean noPlayersInArenas() {
 		// Check if there are any players in any arena (quick way to early exit for event handlers)
 		for (Arena arena : MemoryStorage.arenaList) {

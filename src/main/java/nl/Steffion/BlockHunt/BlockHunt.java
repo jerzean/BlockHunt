@@ -7,6 +7,7 @@ import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.MiscDisguise;
 import nl.Steffion.BlockHunt.Arena.ArenaState;
+import nl.Steffion.BlockHunt.Listeners.*;
 import nl.Steffion.BlockHunt.PermissionsC.Permissions;
 import nl.Steffion.BlockHunt.Commands.CMDcreate;
 import nl.Steffion.BlockHunt.Commands.CMDhelp;
@@ -23,18 +24,6 @@ import nl.Steffion.BlockHunt.Commands.CMDshop;
 import nl.Steffion.BlockHunt.Commands.CMDstart;
 import nl.Steffion.BlockHunt.Commands.CMDtokens;
 import nl.Steffion.BlockHunt.Commands.CMDwand;
-import nl.Steffion.BlockHunt.Listeners.OnBlockBreakEvent;
-import nl.Steffion.BlockHunt.Listeners.OnBlockPlaceEvent;
-import nl.Steffion.BlockHunt.Listeners.OnEntityDamageByEntityEvent;
-import nl.Steffion.BlockHunt.Listeners.OnEntityDamageEvent;
-import nl.Steffion.BlockHunt.Listeners.OnFoodLevelChangeEvent;
-import nl.Steffion.BlockHunt.Listeners.OnInventoryClickEvent;
-import nl.Steffion.BlockHunt.Listeners.OnInventoryCloseEvent;
-import nl.Steffion.BlockHunt.Listeners.OnPlayerDropItemEvent;
-import nl.Steffion.BlockHunt.Listeners.OnPlayerInteractEvent;
-import nl.Steffion.BlockHunt.Listeners.OnPlayerMoveEvent;
-import nl.Steffion.BlockHunt.Listeners.OnPlayerQuitEvent;
-import nl.Steffion.BlockHunt.Listeners.OnSignChangeEvent;
 import nl.Steffion.BlockHunt.Managers.CommandManager;
 import nl.Steffion.BlockHunt.Managers.ConfigManager;
 import nl.Steffion.BlockHunt.Managers.MessageManager;
@@ -129,6 +118,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new OnPlayerDropItemEvent(), this);
 		getServer().getPluginManager().registerEvents(new OnPlayerInteractEvent(), this);
 		getServer().getPluginManager().registerEvents(new OnPlayerMoveEvent(), this);
+		getServer().getPluginManager().registerEvents(new OnPlayerTeleportEvent(), this);
 		getServer().getPluginManager().registerEvents(new OnPlayerQuitEvent(), this);
 		getServer().getPluginManager().registerEvents(new OnSignChangeEvent(), this);
 
@@ -249,7 +239,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
                                 if (!arena.seekers.contains(seeker)) {
                                     ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameSeekerChoosen, "seeker-" + seeker.getName());
                                     arena.seekers.add(seeker);
-                                    seeker.teleport(arena.seekersWarp);
+                                    PlayerHandler.teleport(seeker, arena.seekersWarp);
                                     seeker.getInventory().clear();
                                     seeker.updateInventory();
                                     seeker.setWalkSpeed(0.3F);
@@ -273,7 +263,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
 
                                 MiscDisguise disguise = new MiscDisguise(DisguiseType.FALLING_BLOCK, block.getType());
                                 DisguiseAPI.disguiseToAll(arenaPlayer, disguise);
-                                arenaPlayer.teleport(arena.hidersWarp);
+                                PlayerHandler.teleport(arenaPlayer, arena.hidersWarp);
                                 ItemStack blockCount = new ItemStack(block.getType(), 5);
                                 arenaPlayer.getInventory().setItem(8, blockCount);
                                 arenaPlayer.getInventory().setHelmet(new ItemStack(block));
@@ -307,7 +297,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
                     if (MemoryStorage.seekertime.get(player) != null) {
                         MemoryStorage.seekertime.put(player, MemoryStorage.seekertime.get(player) - 1);
                         if (MemoryStorage.seekertime.get(player) <= 0) {
-                            player.teleport(arena.hidersWarp);
+                            PlayerHandler.teleport(player, arena.hidersWarp);
                             MemoryStorage.seekertime.remove(player);
                             ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameSeekerSpawned, "playername-" + player.getName());
                         }
@@ -461,12 +451,12 @@ public class BlockHunt extends JavaPlugin implements Listener {
 
 	/**
 	 * Args to String. Makes 1 string.
-	 * 
+	 *
 	 * @param input
 	 *            String list which should be converted to a string.
 	 * @param startArg
 	 *            Start on this length.
-	 * 
+	 *
 	 * @return The converted string.
 	 */
 	public static String stringBuilder(String[] input, int startArg) {
@@ -547,7 +537,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
 
 	/**
 	 * Short a String for like the Scoreboard title.
-	 * 
+	 *
 	 * @param string
 	 *            String to be shorten.
 	 * @param maxLenght

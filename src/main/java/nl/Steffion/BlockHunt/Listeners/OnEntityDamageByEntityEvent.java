@@ -5,12 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import me.libraryaddict.disguise.DisguiseAPI;
-import nl.Steffion.BlockHunt.Arena;
+import nl.Steffion.BlockHunt.*;
 import nl.Steffion.BlockHunt.Arena.ArenaState;
-import nl.Steffion.BlockHunt.ArenaHandler;
-import nl.Steffion.BlockHunt.BlockHunt;
-import nl.Steffion.BlockHunt.ConfigC;
-import nl.Steffion.BlockHunt.MemoryStorage;
 import nl.Steffion.BlockHunt.Managers.MessageManager;
 
 import org.apache.commons.lang.StringUtils;
@@ -148,7 +144,7 @@ public class OnEntityDamageByEntityEvent implements Listener {
 						} else {
 							DisguiseAPI.undisguiseToAll(player);
 							MemoryStorage.seekertime.put(player, arena.waitingTimeSeeker);
-							player.teleport(arena.seekersWarp);
+							PlayerHandler.teleport(player, arena.seekersWarp);
 							player.setGameMode(GameMode.SURVIVAL);
 							player.setWalkSpeed(0.3F);
 
