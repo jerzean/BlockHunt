@@ -1,10 +1,7 @@
 package nl.Steffion.BlockHunt.Listeners;
 
-import nl.Steffion.BlockHunt.Arena;
-import nl.Steffion.BlockHunt.ArenaHandler;
+import nl.Steffion.BlockHunt.*;
 import nl.Steffion.BlockHunt.Arena.ArenaState;
-import nl.Steffion.BlockHunt.BlockHunt;
-import nl.Steffion.BlockHunt.MemoryStorage;
 
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -36,7 +33,7 @@ public class OnPlayerMoveEvent implements Listener {
 						Location loc = player.getLocation();
 						player.playEffect(loc, Effect.ENDER_SIGNAL, null);
 						player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1, 1);
-						player.teleport(arena.hidersWarp);
+						PlayerHandler.teleport(player, arena.hidersWarp);
 						return;
 					}
 					double maxX = Math.max(arena.pos1.getX(), arena.pos2.getX());
@@ -51,32 +48,32 @@ public class OnPlayerMoveEvent implements Listener {
 						//event.setCancelled(true);
 						player.playEffect(loc, Effect.ENDER_SIGNAL, null);
 						player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1, 1);
-						player.teleport(arena.hidersWarp);
+						PlayerHandler.teleport(player, arena.hidersWarp);
 					} else if (loc.getBlockX() < minX) {
 						//event.setCancelled(true);
 						player.playEffect(loc, Effect.ENDER_SIGNAL, null);
 						player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1, 1);
-						player.teleport(arena.hidersWarp);
+						PlayerHandler.teleport(player, arena.hidersWarp);
 					} else if (loc.getBlockZ() > maxZ) {
 						//event.setCancelled(true);
 						player.playEffect(loc, Effect.ENDER_SIGNAL, null);
 						player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1, 1);
-						player.teleport(arena.hidersWarp);
+						PlayerHandler.teleport(player, arena.hidersWarp);
 					} else if (loc.getBlockZ() < minZ) {
 						//event.setCancelled(true);
 						player.playEffect(loc, Effect.ENDER_SIGNAL, null);
 						player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1, 1);
-						player.teleport(arena.hidersWarp);
+						PlayerHandler.teleport(player, arena.hidersWarp);
 					} else if (loc.getBlockY() > maxY) {
 						//event.setCancelled(true);
 						player.playEffect(loc, Effect.ENDER_SIGNAL, null);
 						player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1, 1);
-						player.teleport(arena.hidersWarp);
+						PlayerHandler.teleport(player, arena.hidersWarp);
 					} else if (loc.getBlockY() < minY) {
 						//event.setCancelled(true);
 						player.playEffect(loc, Effect.ENDER_SIGNAL, null);
 						player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1, 1);
-						player.teleport(arena.hidersWarp);
+						PlayerHandler.teleport(player, arena.hidersWarp);
 					}
 				}
 			}

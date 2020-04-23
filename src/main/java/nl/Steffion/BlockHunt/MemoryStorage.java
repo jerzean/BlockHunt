@@ -14,6 +14,7 @@ package nl.Steffion.BlockHunt;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import nl.Steffion.BlockHunt.Managers.CommandManager;
@@ -59,4 +60,6 @@ public class MemoryStorage {
 	public static HashMap<Player, Location> moveLoc = new HashMap<>();
 	public static HashMap<Player, Location> hiddenLoc = new HashMap<>();
 	public static HashMap<Player, Boolean> hiddenLocWater = new HashMap<>();
+
+	public static Map<Player, Location> teleportLoc = new HashMap<>();
 }

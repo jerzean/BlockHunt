@@ -97,3 +97,4 @@ error:
   shopNeedMoreTokens: '%TAG%EYou need more tokens before you can buy this item.'
   shopMaxSeekersReached: '%TAG%ESorry, the maximum amount of seekers has been reached!'
   shopMaxHidersReached: '%TAG%ESorry, the maximum amount of hiders has been reached!'
+  teleportBlocked: '%TAG%EYou cannot teleport while playing!'
