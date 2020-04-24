@@ -315,6 +315,7 @@ public class ArenaHandler {
 			player.setWalkSpeed(0.2F);
 
 			MemoryStorage.pData.remove(player);
+			MemoryStorage.choosenBlock.remove(player);
 
 			for (Player pl : Bukkit.getOnlinePlayers()) {
 				pl.showPlayer(BlockHunt.plugin, player);
