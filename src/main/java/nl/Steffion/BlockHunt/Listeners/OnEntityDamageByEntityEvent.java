@@ -145,7 +145,7 @@ public class OnEntityDamageByEntityEvent implements Listener {
 							DisguiseAPI.undisguiseToAll(player);
 							MemoryStorage.seekertime.put(player, arena.waitingTimeSeeker);
 							PlayerHandler.teleport(player, arena.seekersWarp);
-							player.setGameMode(GameMode.SURVIVAL);
+							player.setGameMode(GameMode.ADVENTURE);
 							player.setWalkSpeed(0.3F);
 
 							// Fix for client not showing players after they join

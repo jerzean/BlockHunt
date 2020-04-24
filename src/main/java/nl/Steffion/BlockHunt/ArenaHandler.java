@@ -114,7 +114,7 @@ public class ArenaHandler {
 
 									MemoryStorage.pData.put(player, pad);
 
-									player.setGameMode(GameMode.SURVIVAL);
+									player.setGameMode(GameMode.ADVENTURE);
 									for (PotionEffect pe : player.getActivePotionEffects()) {
 										player.removePotionEffect(pe.getType());
 									}
