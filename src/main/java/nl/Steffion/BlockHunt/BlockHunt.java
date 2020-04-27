@@ -432,7 +432,11 @@ public class BlockHunt extends JavaPlugin implements Listener {
 
                 for (Player pl : arena.playersInArena) {
                     pl.setLevel(arena.timer);
-                    pl.setGameMode(GameMode.SURVIVAL);
+                    if (arena.seekers.contains(pl)) {
+                        pl.setGameMode(GameMode.SURVIVAL);
+                    } else {
+                        pl.setGameMode(GameMode.ADVENTURE);
+                    }
                 }
             }
             SignsHandler.updateSigns(); //TODO Only do this when needed (gamestate change or player count change)
