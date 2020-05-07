@@ -24,9 +24,9 @@ public class OnPlayerQuitEvent implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerJoinEvent(PlayerJoinEvent event) {
-		Player playerJoining = event.getPlayer();
-		playerJoining.teleport(playerJoining.getWorld().getSpawnLocation());
-	}
+//	@EventHandler(priority = EventPriority.HIGHEST)
+//	public void onPlayerJoinEvent(PlayerJoinEvent event) {
+//		Player playerJoining = event.getPlayer();
+//		playerJoining.teleport(playerJoining.getWorld().getSpawnLocation());
+//	}
 }
