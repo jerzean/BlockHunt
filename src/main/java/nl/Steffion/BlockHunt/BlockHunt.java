@@ -110,6 +110,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new OnFoodLevelChangeEvent(), this);
 		getServer().getPluginManager().registerEvents(new OnInventoryClickEvent(), this);
 		getServer().getPluginManager().registerEvents(new OnInventoryCloseEvent(), this);
+		getServer().getPluginManager().registerEvents(new OnPlayerSwapHandItemsEvent(), this);
 
 		// Removed - This is handled by WorldGuard now.
 		// getServer().getPluginManager().registerEvents(
