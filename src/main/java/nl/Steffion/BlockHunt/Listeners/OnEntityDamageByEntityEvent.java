@@ -91,71 +91,75 @@ public class OnEntityDamageByEntityEvent implements Listener {
 						player.setHealth(20);
 						event.setCancelled(true);
 
-						DisguiseAPI.undisguiseToAll(player);
-						MemoryStorage.pBlock.remove(player);
-
-						if (!arena.seekers.contains(player)) {
-							if (MemoryStorage.shop.getFile().get(damager.getName() + ".tokens") == null) {
-								MemoryStorage.shop.getFile().set(damager.getName() + ".tokens", 0);
-								MemoryStorage.shop.save();
-							}
-							int damagerTokens = MemoryStorage.shop.getFile().getInt(damager.getName() + ".tokens");
-							MemoryStorage.shop.getFile().set(damager.getName() + ".tokens", damagerTokens + arena.killTokens);
-							MemoryStorage.shop.save();
-
-							MessageManager.sendFMessage(damager, ConfigC.normal_addedToken, "amount-" + arena.killTokens);
-
-							if (MemoryStorage.shop.getFile().get(player.getName() + ".tokens") == null) {
-								MemoryStorage.shop.getFile().set(player.getName() + ".tokens", 0);
-								MemoryStorage.shop.save();
-							}
-							int playerTokens = MemoryStorage.shop.getFile().getInt(player.getName() + ".tokens");
-							float addingTokens = ((float) arena.hidersTokenWin - (((float) arena.timer / (float) arena.gameTime) * (float) arena.hidersTokenWin));
-							MemoryStorage.shop.getFile().set(player.getName() + ".tokens", playerTokens + (int) addingTokens);
-							MemoryStorage.shop.save();
-
-							MessageManager.sendFMessage(player, ConfigC.normal_addedToken, "amount-" + (int) addingTokens);
-
-							arena.seekers.add(player);
-							player.setWalkSpeed(0.3F);
-							ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameHiderDied, "playername-" + player.getDisplayName(), "killer-" + damager.getDisplayName());
-
-							int hidercount = (arena.playersInArena.size() - arena.seekers.size());
-							if ((hidercount <= 3) && (hidercount > 0)) {
-								List<String> hiders = new ArrayList<>();
-								for (Player p : arena.playersInArena) {
-									if (!arena.seekers.contains(p)) {
-										hiders.add(p.getName());
-									}
-								}
-								Collections.sort(hiders);
-
-								ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameHidersLeft, "left-" + StringUtils.join(hiders.toArray(), ", "));
-							} else {
-								ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameHidersLeft, "left-" + hidercount);
-							}
-						}
-
-						player.getInventory().clear();
-						player.updateInventory();
-
-						if (arena.seekers.size() >= arena.playersInArena.size()) {
-							ArenaHandler.seekersWin(arena);
-						} else {
+						// try moving everything to the next tick to prevent "Removing entity while ticking" errors
+						Player finalDamager = damager;
+						player.getServer().getScheduler().runTask(BlockHunt.plugin, () -> {
 							DisguiseAPI.undisguiseToAll(player);
-							MemoryStorage.seekertime.put(player, arena.waitingTimeSeeker);
-							PlayerHandler.teleport(player, arena.seekersWarp);
-							player.setGameMode(GameMode.SURVIVAL);
-							player.setWalkSpeed(0.3F);
+							MemoryStorage.pBlock.remove(player);
 
-							// Fix for client not showing players after they join
-							for (Player otherplayer : arena.playersInArena) {
-								if (otherplayer.canSee(player))
-									otherplayer.showPlayer(BlockHunt.plugin, player); // Make new player visible to others
-								if (player.canSee(otherplayer))
-									player.showPlayer(BlockHunt.plugin, otherplayer); // Make other players visible to new player
+							if (!arena.seekers.contains(player)) {
+								if (MemoryStorage.shop.getFile().get(finalDamager.getName() + ".tokens") == null) {
+									MemoryStorage.shop.getFile().set(finalDamager.getName() + ".tokens", 0);
+									MemoryStorage.shop.save();
+								}
+								int damagerTokens = MemoryStorage.shop.getFile().getInt(finalDamager.getName() + ".tokens");
+								MemoryStorage.shop.getFile().set(finalDamager.getName() + ".tokens", damagerTokens + arena.killTokens);
+								MemoryStorage.shop.save();
+
+								MessageManager.sendFMessage(finalDamager, ConfigC.normal_addedToken, "amount-" + arena.killTokens);
+
+								if (MemoryStorage.shop.getFile().get(player.getName() + ".tokens") == null) {
+									MemoryStorage.shop.getFile().set(player.getName() + ".tokens", 0);
+									MemoryStorage.shop.save();
+								}
+								int playerTokens = MemoryStorage.shop.getFile().getInt(player.getName() + ".tokens");
+								float addingTokens = ((float) arena.hidersTokenWin - (((float) arena.timer / (float) arena.gameTime) * (float) arena.hidersTokenWin));
+								MemoryStorage.shop.getFile().set(player.getName() + ".tokens", playerTokens + (int) addingTokens);
+								MemoryStorage.shop.save();
+
+								MessageManager.sendFMessage(player, ConfigC.normal_addedToken, "amount-" + (int) addingTokens);
+
+								arena.seekers.add(player);
+								player.setWalkSpeed(0.3F);
+								ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameHiderDied, "playername-" + player.getDisplayName(), "killer-" + finalDamager.getDisplayName());
+
+								int hidercount = (arena.playersInArena.size() - arena.seekers.size());
+								if ((hidercount <= 3) && (hidercount > 0)) {
+									List<String> hiders = new ArrayList<>();
+									for (Player p : arena.playersInArena) {
+										if (!arena.seekers.contains(p)) {
+											hiders.add(p.getName());
+										}
+									}
+									Collections.sort(hiders);
+
+									ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameHidersLeft, "left-" + StringUtils.join(hiders.toArray(), ", "));
+								} else {
+									ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameHidersLeft, "left-" + hidercount);
+								}
 							}
-						}
+
+							player.getInventory().clear();
+							player.updateInventory();
+
+							if (arena.seekers.size() >= arena.playersInArena.size()) {
+								ArenaHandler.seekersWin(arena);
+							} else {
+								DisguiseAPI.undisguiseToAll(player);
+								MemoryStorage.seekertime.put(player, arena.waitingTimeSeeker);
+								PlayerHandler.teleport(player, arena.seekersWarp);
+								player.setGameMode(GameMode.SURVIVAL);
+								player.setWalkSpeed(0.3F);
+
+								// Fix for client not showing players after they join
+								for (Player otherplayer : arena.playersInArena) {
+									if (otherplayer.canSee(player))
+										otherplayer.showPlayer(BlockHunt.plugin, player); // Make new player visible to others
+									if (player.canSee(otherplayer))
+										player.showPlayer(BlockHunt.plugin, otherplayer); // Make other players visible to new player
+								}
+							}
+						});
 					}
 				}
 			}

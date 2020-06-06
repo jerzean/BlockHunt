@@ -25,10 +25,8 @@ public class OnInventoryClickEvent implements Listener {
 		Player player = (Player) event.getWhoClicked();
 
 		for (Arena arena : MemoryStorage.arenaList) {
-			if (arena.playersInArena.contains(player) && !arena.seekers.contains(player)) {
-				if (event.getSlot() == 8 || event.getSlot() == 39) {
-					event.setCancelled(true);
-				}
+			if (arena.playersInArena.contains(player)) {
+				event.setCancelled(true);
 			}
 		}
 
