@@ -1,6 +1,6 @@
 log:
-  enabledPlugin: '%TAG%N%name%&a&k + %N%version% is now Enabled. Made by %A%autors%%N.'
-  disabledPlugin: '%TAG%N%name%&c&k - %N%version% is now Disabled. Made by %A%autors%%N.'
+  enabledPlugin: '%TAG%N%name%&a&k + %N%version% is now Enabled. Made by %A%authors%%N.'
+  disabledPlugin: '%TAG%N%name%&c&k - %N%version% is now Disabled. Made by %A%authors%%N.'
 help:
   info: '%NDisplays the plugin''s info.'
   help: '%NShows a list of commands.'
@@ -60,7 +60,7 @@ normal:
   shopChoosenHiders: '%TAG%NYou''ve choosen to be a %Ahider%N!'
   ingameBlocksLeft: '%TAG%NRemaining blocks: %A%1%%N'
 warning:
-  lobbyNeedAtleast: '%TAG%WYou need atleast %A%1%%MemoryStorage player(s) to start the game!'
+  lobbyNeedAtleast: '%TAG%WYou need atleast %A%1% player(s) to start the game!'
   ingameNEWSeekerChoosen: '%TAG%WThe last seeker left and a new seeker has been choosen!'
   unableToCommand: '%TAG%WSorry but that command is disabled in the arena.'
   ingameNoSolidPlace: '%TAG%WThat''s not a valid place to become solid!'
@@ -97,3 +97,5 @@ error:
   shopNeedMoreTokens: '%TAG%EYou need more tokens before you can buy this item.'
   shopMaxSeekersReached: '%TAG%ESorry, the maximum amount of seekers has been reached!'
   shopMaxHidersReached: '%TAG%ESorry, the maximum amount of hiders has been reached!'
+  teleportFailed: '%TAG%EUnable to teleport you into the arena.'
+  teleportBlocked: '%TAG%EYou cannot teleport while playing!'

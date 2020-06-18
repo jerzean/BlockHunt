@@ -96,6 +96,13 @@ public class ArenaHandler {
 											return;
 										}
 									}
+
+									boolean canWarp = PlayerHandler.teleport(player, arena.lobbyWarp);
+									if (!canWarp) {
+										MessageManager.sendFMessage(player, ConfigC.error_teleportFailed);
+										return;
+									}
+
 									System.out.println("[BlockHunt] " + player.getName() + " has joined " + arenaname);
 									arena.playersInArena.add(player);
 									JoinArenaEvent event = new JoinArenaEvent(player, arena);
@@ -107,7 +114,6 @@ public class ArenaHandler {
 
 									MemoryStorage.pData.put(player, pad);
 
-									player.teleport(arena.lobbyWarp);
 									player.setGameMode(GameMode.SURVIVAL);
 									for (PotionEffect pe : player.getActivePotionEffects()) {
 										player.removePotionEffect(pe.getType());
@@ -130,14 +136,14 @@ public class ArenaHandler {
 									// they join
 									for (Player otherplayer : arena.playersInArena) {
 										if (otherplayer.canSee(player))
-											otherplayer.showPlayer(player); // Make
+											otherplayer.showPlayer(BlockHunt.plugin, player); // Make
 																			// new
 																			// player
 																			// visible
 																			// to
 																			// others
 										if (player.canSee(otherplayer))
-											player.showPlayer(otherplayer); // Make
+											player.showPlayer(BlockHunt.plugin, otherplayer); // Make
 																			// other
 																			// players
 																			// visible
@@ -263,21 +269,21 @@ public class ArenaHandler {
 					ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameSeekerChoosen, "seeker-" + seeker.getName());
 					DisguiseAPI.undisguiseToAll(seeker);
 					for (Player pl : Bukkit.getOnlinePlayers()) {
-						pl.showPlayer(seeker);
+						pl.showPlayer(BlockHunt.plugin, seeker);
 					}
 					seeker.getInventory().clear();
 					arena.seekers.add(seeker);
-					seeker.teleport(arena.seekersWarp);
+					PlayerHandler.teleport(seeker, arena.seekersWarp);
 					MemoryStorage.seekertime.put(seeker, arena.waitingTimeSeeker);
 					seeker.setWalkSpeed(0.3F);
 
 					// Fix for client not showing players after they join
 					for (Player otherplayer : arena.playersInArena) {
 						if (otherplayer.canSee(player))
-							otherplayer.showPlayer(player); // Make new player
+							otherplayer.showPlayer(BlockHunt.plugin, player); // Make new player
 															// visible to others
 						if (player.canSee(otherplayer))
-							player.showPlayer(otherplayer); // Make other
+							player.showPlayer(BlockHunt.plugin, otherplayer); // Make other
 															// players visible
 															// to new player
 					}
@@ -300,7 +306,7 @@ public class ArenaHandler {
 			player.setHealth(pad.pHealth);
 			player.setFoodLevel(pad.pFood);
 			player.addPotionEffects(pad.pPotionEffects);
-			player.teleport(arena.spawnWarp);
+			PlayerHandler.teleport(player, arena.spawnWarp);
 			player.setGameMode(pad.pGameMode);
 			player.setAllowFlight(pad.pFlying);
 			if (player.getAllowFlight()) {
@@ -309,9 +315,10 @@ public class ArenaHandler {
 			player.setWalkSpeed(0.2F);
 
 			MemoryStorage.pData.remove(player);
+			MemoryStorage.choosenBlock.remove(player);
 
 			for (Player pl : Bukkit.getOnlinePlayers()) {
-				pl.showPlayer(player);
+				pl.showPlayer(BlockHunt.plugin, player);
 				if (MemoryStorage.hiddenLoc.get(player) != null) {
 					if (MemoryStorage.hiddenLocWater.get(player) != null) {
 						Block pBlock = MemoryStorage.hiddenLoc.get(player).getBlock();
@@ -434,7 +441,7 @@ public class ArenaHandler {
 		arena.timer = 0;
 		arena.playersInArena.clear();
 	}
-	
+
 	public static boolean noPlayersInArenas() {
 		// Check if there are any players in any arena (quick way to early exit for event handlers)
 		for (Arena arena : MemoryStorage.arenaList) {

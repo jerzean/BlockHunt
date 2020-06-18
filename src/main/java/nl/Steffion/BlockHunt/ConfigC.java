@@ -50,8 +50,8 @@ public enum ConfigC {
 
 	requireInventoryClearOnJoin(false, MemoryStorage.config),
 
-	log_enabledPlugin("%TAG%N%name%&a&k + %N%version% is now Enabled. Made by %A%autors%%N.", MemoryStorage.messages), log_disabledPlugin(
-			"%TAG%N%name%&c&k - %N%version% is now Disabled. Made by %A%autors%%N.", MemoryStorage.messages),
+	log_enabledPlugin("%TAG%N%name%&a&k + %N%version% is now Enabled. Made by %A%authors%%N.", MemoryStorage.messages), log_disabledPlugin(
+			"%TAG%N%name%&c&k - %N%version% is now Disabled. Made by %A%authors%%N.", MemoryStorage.messages),
 
 	help_info("%NDisplays the plugin's info.", MemoryStorage.messages), help_help("%NShows a list of commands.", MemoryStorage.messages), help_reload("%NReloads all configs.", MemoryStorage.messages), help_join(
 			"%NJoins a " + BlockHunt.pdfFile.getName() + " game.", MemoryStorage.messages), help_leave("%NLeave a " + BlockHunt.pdfFile.getName() + " game.", MemoryStorage.messages), help_list(
@@ -81,7 +81,7 @@ public enum ConfigC {
 			"%TAG%NYou've bought the '%A%itemname%%N' item!", MemoryStorage.messages), normal_shopChoosenBlock("%TAG%NYou've choosen to be a(n) '%A%block%%N' block!", MemoryStorage.messages), normal_shopChoosenSeeker(
 			"%TAG%NYou've choosen to be a %Aseeker%N!", MemoryStorage.messages), normal_shopChoosenHiders("%TAG%NYou've choosen to be a %Ahider%N!", MemoryStorage.messages), normal_ingameBlocksLeft("%TAG%NRemaining blocks: %A%1%%N", MemoryStorage.messages),
 
-	warning_lobbyNeedAtleast("%TAG%WYou need atleast %A%1%%MemoryStorage player(s) to start the game!", MemoryStorage.messages), warning_ingameNEWSeekerChoosen(
+	warning_lobbyNeedAtleast("%TAG%WYou need atleast %A%1% player(s) to start the game!", MemoryStorage.messages), warning_ingameNEWSeekerChoosen(
 			"%TAG%WThe last seeker left and a new seeker has been choosen!", MemoryStorage.messages), warning_unableToCommand(
 			"%TAG%WSorry but that command is disabled in the arena.", MemoryStorage.messages), warning_ingameNoSolidPlace("%TAG%WThat's not a valid place to become solid!",
 			MemoryStorage.messages), warning_arenaStopped("%TAG%WThe arena has been forced to stop!", MemoryStorage.messages),
@@ -103,7 +103,9 @@ public enum ConfigC {
 			"%TAG%ENo player found with the name '%A%playername%%E'!", MemoryStorage.messages), error_tokensUnknownsetting("%TAG%E'%A%option%%E' is not a known option!", MemoryStorage.messages), error_shopNeedMoreTokens(
 			"%TAG%EYou need more tokens before you can buy this item.", MemoryStorage.messages), error_shopMaxSeekersReached(
 			"%TAG%ESorry, the maximum amount of seekers has been reached!", MemoryStorage.messages), error_shopMaxHidersReached(
-			"%TAG%ESorry, the maximum amount of hiders has been reached!", MemoryStorage.messages);
+			"%TAG%ESorry, the maximum amount of hiders has been reached!", MemoryStorage.messages),
+	error_teleportFailed("%TAG%EUnable to teleport you into the arena.", MemoryStorage.messages),
+	error_teleportBlocked("%TAG%EYou cannot teleport while playing!", MemoryStorage.messages);
 
 	public Object value;
 	public ConfigManager config;
@@ -111,7 +113,7 @@ public enum ConfigC {
 
 	/**
 	 * Makes an object from the list above.
-	 * 
+	 *
 	 * @param value
 	 *            Setting in the config file.
 	 * @param config

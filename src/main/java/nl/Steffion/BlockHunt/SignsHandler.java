@@ -92,89 +92,93 @@ public class SignsHandler {
 		MemoryStorage.signs.load();
 		for (String sign : MemoryStorage.signs.getFile().getKeys(false)) {
 			Location loc = (Location) MemoryStorage.signs.getFile().get(sign + ".location");
-			if (loc.getBlock().getType().equals(Material.SIGN) || loc.getBlock().getType().equals(Material.WALL_SIGN)) {
-				Sign signblock = (Sign) loc.getBlock().getState();
-				String[] lines = signblock.getLines();
-				if (sign.contains("leave")) {
 
-					ArrayList<String> signLines = (ArrayList<String>) MemoryStorage.config.getFile().getStringList(ConfigC.sign_LEAVE.location);
-					int linecount = 0;
-					for (String line : signLines) {
-						if (linecount <= 3) {
-							signblock.setLine(linecount, MessageManager.replaceAll(line));
+			// check if that area is actually loaded. If not move on.
+			if (loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) {
+				if (loc.getBlock().getState() instanceof Sign) {
+					Sign signblock = (Sign) loc.getBlock().getState();
+					String[] lines = signblock.getLines();
+					if (sign.contains("leave")) {
+
+						ArrayList<String> signLines = (ArrayList<String>) MemoryStorage.config.getFile().getStringList(ConfigC.sign_LEAVE.location);
+						int linecount = 0;
+						for (String line : signLines) {
+							if (linecount <= 3) {
+								signblock.setLine(linecount, MessageManager.replaceAll(line));
+							}
+
+							linecount = linecount + 1;
 						}
+						signblock.update();
+					} else if (sign.contains("shop")) {
+						ArrayList<String> signLines = (ArrayList<String>) MemoryStorage.config.getFile().getStringList(ConfigC.sign_SHOP.location);
+						int linecount = 0;
+						for (String line : signLines) {
+							if (linecount <= 3) {
+								signblock.setLine(linecount, MessageManager.replaceAll(line));
+							}
 
-						linecount = linecount + 1;
-					}
-					signblock.update();
-				} else if (sign.contains("shop")) {
-					ArrayList<String> signLines = (ArrayList<String>) MemoryStorage.config.getFile().getStringList(ConfigC.sign_SHOP.location);
-					int linecount = 0;
-					for (String line : signLines) {
-						if (linecount <= 3) {
-							signblock.setLine(linecount, MessageManager.replaceAll(line));
+							linecount = linecount + 1;
 						}
+						signblock.update();
+					} else {
+						for (Arena arena : MemoryStorage.arenaList) {
+							if (lines[1].endsWith(arena.arenaName)) {
+								if (arena.gameState.equals(ArenaState.WAITING)) {
+									ArrayList<String> signLines = (ArrayList<String>) MemoryStorage.config.getFile().getStringList(ConfigC.sign_WAITING.location);
+									int linecount = 0;
+									if (signLines != null) {
+										for (String line : signLines) {
+											if (linecount <= 3) {
+												signblock.setLine(
+														linecount,
+														MessageManager.replaceAll(line, "arenaname-" + arena.arenaName, "players-" + arena.playersInArena.size(), "maxplayers-"
+																+ arena.maxPlayers, "timeleft-" + arena.timer));
+											}
 
-						linecount = linecount + 1;
-					}
-					signblock.update();
-				} else {
-					for (Arena arena : MemoryStorage.arenaList) {
-						if (lines[1].endsWith(arena.arenaName)) {
-							if (arena.gameState.equals(ArenaState.WAITING)) {
-								ArrayList<String> signLines = (ArrayList<String>) MemoryStorage.config.getFile().getStringList(ConfigC.sign_WAITING.location);
-								int linecount = 0;
-								if (signLines != null) {
-									for (String line : signLines) {
-										if (linecount <= 3) {
-											signblock.setLine(
-													linecount,
-													MessageManager.replaceAll(line, "arenaname-" + arena.arenaName, "players-" + arena.playersInArena.size(), "maxplayers-"
-															+ arena.maxPlayers, "timeleft-" + arena.timer));
+											linecount = linecount + 1;
 										}
-
-										linecount = linecount + 1;
 									}
-								}
-								signblock.update();
-							} else if (arena.gameState.equals(ArenaState.STARTING)) {
-								ArrayList<String> signLines = (ArrayList<String>) MemoryStorage.config.getFile().getStringList(ConfigC.sign_STARTING.location);
-								int linecount = 0;
-								if (signLines != null) {
-									for (String line : signLines) {
-										if (linecount <= 3) {
-											signblock.setLine(
-													linecount,
-													MessageManager.replaceAll(line, "arenaname-" + arena.arenaName, "players-" + arena.playersInArena.size(), "maxplayers-"
-															+ arena.maxPlayers, "timeleft-" + arena.timer));
+									signblock.update();
+								} else if (arena.gameState.equals(ArenaState.STARTING)) {
+									ArrayList<String> signLines = (ArrayList<String>) MemoryStorage.config.getFile().getStringList(ConfigC.sign_STARTING.location);
+									int linecount = 0;
+									if (signLines != null) {
+										for (String line : signLines) {
+											if (linecount <= 3) {
+												signblock.setLine(
+														linecount,
+														MessageManager.replaceAll(line, "arenaname-" + arena.arenaName, "players-" + arena.playersInArena.size(), "maxplayers-"
+																+ arena.maxPlayers, "timeleft-" + arena.timer));
+											}
+
+											linecount = linecount + 1;
 										}
-
-										linecount = linecount + 1;
 									}
-								}
-								signblock.update();
-							} else if (arena.gameState.equals(ArenaState.INGAME)) {
-								ArrayList<String> signLines = (ArrayList<String>) MemoryStorage.config.getFile().getStringList(ConfigC.sign_INGAME.location);
-								int linecount = 0;
-								if (signLines != null) {
-									for (String line : signLines) {
-										if (linecount <= 3) {
-											signblock.setLine(
-													linecount,
-													MessageManager.replaceAll(line, "arenaname-" + arena.arenaName, "players-" + arena.playersInArena.size(), "maxplayers-"
-															+ arena.maxPlayers, "timeleft-" + arena.timer));
+									signblock.update();
+								} else if (arena.gameState.equals(ArenaState.INGAME)) {
+									ArrayList<String> signLines = (ArrayList<String>) MemoryStorage.config.getFile().getStringList(ConfigC.sign_INGAME.location);
+									int linecount = 0;
+									if (signLines != null) {
+										for (String line : signLines) {
+											if (linecount <= 3) {
+												signblock.setLine(
+														linecount,
+														MessageManager.replaceAll(line, "arenaname-" + arena.arenaName, "players-" + arena.playersInArena.size(), "maxplayers-"
+																+ arena.maxPlayers, "timeleft-" + arena.timer));
+											}
+
+											linecount = linecount + 1;
 										}
-
-										linecount = linecount + 1;
 									}
+									signblock.update();
 								}
-								signblock.update();
 							}
 						}
 					}
+				} else {
+					removeSign(loc);
 				}
-			} else {
-				removeSign(loc);
 			}
 		}
 	}

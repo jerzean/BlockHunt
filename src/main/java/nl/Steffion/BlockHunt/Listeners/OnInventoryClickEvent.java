@@ -5,6 +5,7 @@ import nl.Steffion.BlockHunt.Arena.ArenaType;
 import nl.Steffion.BlockHunt.MemoryStorage;
 import nl.Steffion.BlockHunt.Managers.MessageManager;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 public class OnInventoryClickEvent implements Listener {
@@ -23,16 +25,15 @@ public class OnInventoryClickEvent implements Listener {
 		Player player = (Player) event.getWhoClicked();
 
 		for (Arena arena : MemoryStorage.arenaList) {
-			if (arena.playersInArena.contains(player) && !arena.seekers.contains(player)) {
-				if (event.getSlot() == 8 || event.getSlot() == 39) {
-					event.setCancelled(true);
-				}
+			if (arena.playersInArena.contains(player)) {
+				event.setCancelled(true);
 			}
 		}
 
 		Inventory inv = event.getInventory();
+		InventoryView invView = event.getView();
 		if (inv.getType().equals(InventoryType.CHEST)) {
-			if (inv.getName().contains("DisguiseBlocks")) {
+			if (invView.getTitle().contains("DisguiseBlocks")) {
 				if (event.getCurrentItem() != null) {
 					if (!event.getCurrentItem().getType().isBlock()) {
 						if (!event.getCurrentItem().getType().equals(Material.FLOWER_POT)) {
@@ -46,11 +47,11 @@ public class OnInventoryClickEvent implements Listener {
 			}
 
 			// Early exit if this isnt a blockhunt inventory
-			if (!inv.getName().contains("BlockHunt"))
+			if (!invView.getTitle().contains("BlockHunt"))
 				return;
 
-			if (inv.getName().startsWith("\u00A7r")) {
-				if (inv.getName().equals(MessageManager.replaceAll("\u00A7r" + MemoryStorage.config.get(ConfigC.shop_title)))) {
+			if (invView.getTitle().startsWith("\u00A7r")) {
+				if (invView.getTitle().equals(MessageManager.replaceAll("\u00A7r" + MemoryStorage.config.get(ConfigC.shop_title)))) {
 					event.setCancelled(true);
 					ItemStack item = event.getCurrentItem();
 					if (MemoryStorage.shop.getFile().get(player.getName() + ".tokens") == null) {
@@ -90,20 +91,22 @@ public class OnInventoryClickEvent implements Listener {
 					}
 
 					InventoryHandler.openShop(player);
-				} else if (inv.getName().contains(MessageManager.replaceAll((String) MemoryStorage.config.get(ConfigC.shop_blockChooserv1Name)))) {
+				} else if (invView.getTitle().contains(MessageManager.replaceAll((String) MemoryStorage.config.get(ConfigC.shop_blockChooserv1Name)))) {
 					event.setCancelled(true);
-					if (event.getCurrentItem().getType() != Material.AIR) {
+					if (event.getCurrentItem() != null) {
 						if (event.getCurrentItem().getType().isBlock()) {
 							MemoryStorage.choosenBlock.put(player, event.getCurrentItem());
+							String blockName = event.getCurrentItem().getType().name();
+							blockName = WordUtils.capitalizeFully(blockName.replace("_", " "));
 							MessageManager.sendFMessage(player, ConfigC.normal_shopChoosenBlock, "block-"
-									+ event.getCurrentItem().getType().toString().replaceAll("_", "").replaceAll("BLOCK", "").toLowerCase());
+									+ blockName);
 						} else {
 							MessageManager.sendFMessage(player, ConfigC.error_setNotABlock);
 						}
 					}
-				} else if (inv.getName().contains(MessageManager.replaceAll((String) MemoryStorage.config.get(ConfigC.shop_BlockHuntPassv2Name)))) {
+				} else if (invView.getTitle().contains(MessageManager.replaceAll((String) MemoryStorage.config.get(ConfigC.shop_BlockHuntPassv2Name)))) {
 					event.setCancelled(true);
-					if (event.getCurrentItem().getType() != Material.AIR) {
+					if (event.getCurrentItem() != null) {
 						if (event.getCurrentItem().getType().equals(Material.BLUE_WOOL)) {
 							int i = 0;
 							for (Arena arena : MemoryStorage.arenaList) {
@@ -121,7 +124,7 @@ public class OnInventoryClickEvent implements Listener {
 									MessageManager.sendFMessage(player, ConfigC.error_shopMaxSeekersReached);
 								} else {
 									MemoryStorage.choosenSeeker.put(player, true);
-									player.getInventory().setItemInHand(new ItemStack(Material.AIR));
+									player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
 									player.updateInventory();
 									MessageManager.sendFMessage(player, ConfigC.normal_shopChoosenSeeker);
 									inv.clear();
@@ -152,7 +155,7 @@ public class OnInventoryClickEvent implements Listener {
 									MessageManager.sendFMessage(player, ConfigC.error_shopMaxHidersReached);
 								} else {
 									MemoryStorage.choosenSeeker.put(player, false);
-									player.getInventory().setItemInHand(new ItemStack(Material.AIR));
+									player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
 									player.updateInventory();
 									MessageManager.sendFMessage(player, ConfigC.normal_shopChoosenHiders);
 									inv.clear();

@@ -7,6 +7,7 @@ import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.MiscDisguise;
 import nl.Steffion.BlockHunt.Arena.ArenaState;
+import nl.Steffion.BlockHunt.Listeners.*;
 import nl.Steffion.BlockHunt.PermissionsC.Permissions;
 import nl.Steffion.BlockHunt.Commands.CMDcreate;
 import nl.Steffion.BlockHunt.Commands.CMDhelp;
@@ -23,23 +24,10 @@ import nl.Steffion.BlockHunt.Commands.CMDshop;
 import nl.Steffion.BlockHunt.Commands.CMDstart;
 import nl.Steffion.BlockHunt.Commands.CMDtokens;
 import nl.Steffion.BlockHunt.Commands.CMDwand;
-import nl.Steffion.BlockHunt.Listeners.OnBlockBreakEvent;
-import nl.Steffion.BlockHunt.Listeners.OnBlockPlaceEvent;
-import nl.Steffion.BlockHunt.Listeners.OnEntityDamageByEntityEvent;
-import nl.Steffion.BlockHunt.Listeners.OnEntityDamageEvent;
-import nl.Steffion.BlockHunt.Listeners.OnFoodLevelChangeEvent;
-import nl.Steffion.BlockHunt.Listeners.OnInventoryClickEvent;
-import nl.Steffion.BlockHunt.Listeners.OnInventoryCloseEvent;
-import nl.Steffion.BlockHunt.Listeners.OnPlayerDropItemEvent;
-import nl.Steffion.BlockHunt.Listeners.OnPlayerInteractEvent;
-import nl.Steffion.BlockHunt.Listeners.OnPlayerMoveEvent;
-import nl.Steffion.BlockHunt.Listeners.OnPlayerQuitEvent;
-import nl.Steffion.BlockHunt.Listeners.OnSignChangeEvent;
 import nl.Steffion.BlockHunt.Managers.CommandManager;
 import nl.Steffion.BlockHunt.Managers.ConfigManager;
 import nl.Steffion.BlockHunt.Managers.MessageManager;
 import nl.Steffion.BlockHunt.Managers.PermissionsManager;
-import nl.Steffion.BlockHunt.Serializables.LocationSerializable;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
@@ -49,6 +37,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -121,6 +110,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new OnFoodLevelChangeEvent(), this);
 		getServer().getPluginManager().registerEvents(new OnInventoryClickEvent(), this);
 		getServer().getPluginManager().registerEvents(new OnInventoryCloseEvent(), this);
+		getServer().getPluginManager().registerEvents(new OnPlayerSwapHandItemsEvent(), this);
 
 		// Removed - This is handled by WorldGuard now.
 		// getServer().getPluginManager().registerEvents(
@@ -129,10 +119,10 @@ public class BlockHunt extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new OnPlayerDropItemEvent(), this);
 		getServer().getPluginManager().registerEvents(new OnPlayerInteractEvent(), this);
 		getServer().getPluginManager().registerEvents(new OnPlayerMoveEvent(), this);
+		getServer().getPluginManager().registerEvents(new OnPlayerTeleportEvent(), this);
 		getServer().getPluginManager().registerEvents(new OnPlayerQuitEvent(), this);
 		getServer().getPluginManager().registerEvents(new OnSignChangeEvent(), this);
 
-		ConfigurationSerialization.registerClass(LocationSerializable.class, "BlockHuntLocation");
 		ConfigurationSerialization.registerClass(Arena.class, "BlockHuntArena");
 
 		pdfFile = getDescription();
@@ -186,7 +176,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
 
 		ArenaHandler.loadArenas();
 
-		MessageManager.sendFMessage(null, ConfigC.log_enabledPlugin, "name-" + BlockHunt.pdfFile.getName(), "version-" + BlockHunt.pdfFile.getVersion(), "autors-"
+		MessageManager.sendFMessage(null, ConfigC.log_enabledPlugin, "name-" + BlockHunt.pdfFile.getName(), "version-" + BlockHunt.pdfFile.getVersion(), "authors-"
 				+ BlockHunt.pdfFile.getAuthors().get(0));
 
 		// Welcome to the massive game loop!!
@@ -250,7 +240,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
                                 if (!arena.seekers.contains(seeker)) {
                                     ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameSeekerChoosen, "seeker-" + seeker.getName());
                                     arena.seekers.add(seeker);
-                                    seeker.teleport(arena.seekersWarp);
+                                    PlayerHandler.teleport(seeker, arena.seekersWarp);
                                     seeker.getInventory().clear();
                                     seeker.updateInventory();
                                     seeker.setWalkSpeed(0.3F);
@@ -272,24 +262,17 @@ public class BlockHunt extends JavaPlugin implements Listener {
                                     MemoryStorage.choosenBlock.remove(arenaPlayer);
                                 }
 
-                                MiscDisguise disguise = new MiscDisguise(DisguiseType.FALLING_BLOCK, block.getType(),0);
+                                MiscDisguise disguise = new MiscDisguise(DisguiseType.FALLING_BLOCK, block.getType());
                                 DisguiseAPI.disguiseToAll(arenaPlayer, disguise);
-
-                                arenaPlayer.teleport(arena.hidersWarp);
-
+                                PlayerHandler.teleport(arenaPlayer, arena.hidersWarp);
                                 ItemStack blockCount = new ItemStack(block.getType(), 5);
-                                blockCount.setDurability(block.getDurability());
                                 arenaPlayer.getInventory().setItem(8, blockCount);
                                 arenaPlayer.getInventory().setHelmet(new ItemStack(block));
                                 MemoryStorage.pBlock.put(arenaPlayer, block);
-
-                                if (block.getDurability() != 0) {
-                                    MessageManager.sendFMessage(arenaPlayer, ConfigC.normal_ingameBlock,
-                                            "block-" + block.getType().name().replaceAll("_", "").replaceAll("BLOCK", "").toLowerCase() + ":" + block.getDurability());
-                                } else {
-                                    MessageManager.sendFMessage(arenaPlayer, ConfigC.normal_ingameBlock,
-                                            "block-" + block.getType().name().replaceAll("_", "").replaceAll("BLOCK", "").toLowerCase());
-                                }
+                                String blockName = block.getType().name();
+                                blockName = WordUtils.capitalizeFully(blockName.replace("_", " "));
+                                MessageManager.sendFMessage(arenaPlayer, ConfigC.normal_ingameBlock,
+                                        "block-" + blockName);
                             }
                         }
                     }
@@ -297,6 +280,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
 
                 for (Player player : arena.seekers) {
                     if (player.getInventory().getItem(0) == null || player.getInventory().getItem(0).getType() != Material.DIAMOND_SWORD) {
+                        player.getInventory().clear(); // semi prevent duping infinite swords. TODO: Fix this properly
                         ItemStack i = new ItemStack(Material.DIAMOND_SWORD, 1);
                         i.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 10);
                         player.getInventory().setItem(0, i);
@@ -314,7 +298,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
                     if (MemoryStorage.seekertime.get(player) != null) {
                         MemoryStorage.seekertime.put(player, MemoryStorage.seekertime.get(player) - 1);
                         if (MemoryStorage.seekertime.get(player) <= 0) {
-                            player.teleport(arena.hidersWarp);
+                            PlayerHandler.teleport(player, arena.hidersWarp);
                             MemoryStorage.seekertime.remove(player);
                             ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameSeekerSpawned, "playername-" + player.getName());
                         }
@@ -326,7 +310,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
                     if (arena.timer > 0) {
                         if (arena.timer == arena.gameTime - arena.timeUntilHidersSword) {
                             ItemStack sword = new ItemStack(Material.WOODEN_SWORD, 1);
-                            sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
+                            sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
                             for (Player arenaPlayer : arena.playersInArena) {
                                 if (!arena.seekers.contains(arenaPlayer)) {
                                     arenaPlayer.getInventory().addItem(sword);
@@ -400,9 +384,10 @@ public class BlockHunt extends JavaPlugin implements Listener {
                                         block.setAmount(block.getAmount() - 1);
                                     } else {
                                         Block pBlock = player.getLocation().getBlock();
-                                        if (pBlock.getType().equals(Material.AIR) || pBlock.getType().equals(Material.WATER)
-                                                || pBlock.getType().equals(Material.WATER)) {
-                                            if (pBlock.getType().equals(Material.WATER) || pBlock.getType().equals(Material.WATER)) {
+                                        BlockData pBlockData = pBlock.getBlockData();
+                                        if (pBlockData.getMaterial().equals(Material.AIR) || pBlockData.getMaterial().equals(Material.WATER)
+                                                || pBlockData.getMaterial().equals(Material.WATER)) {
+                                            if (pBlockData.getMaterial().equals(Material.WATER) || pBlockData.getMaterial().equals(Material.WATER)) {
                                                 MemoryStorage.hiddenLocWater.put(player, true);
                                             } else {
                                                 MemoryStorage.hiddenLocWater.put(player, false);
@@ -411,29 +396,23 @@ public class BlockHunt extends JavaPlugin implements Listener {
                                                 DisguiseAPI.undisguiseToAll(player);
                                                 for (Player pl : Bukkit.getOnlinePlayers()) {
                                                     if (!pl.equals(player)) {
-                                                        pl.hidePlayer(player);
-                                                        pl.sendBlockChange(pBlock.getLocation(), block.getType(), (byte) block.getDurability());
+                                                        pl.hidePlayer(this, player);
+                                                        pl.sendBlockChange(pBlock.getLocation(), block.getType().createBlockData());
                                                     }
                                                 }
 
                                                 block.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
                                                 player.playSound(pLoc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
                                                 MemoryStorage.hiddenLoc.put(player, moveLoc);
-                                                if (block.getDurability() != 0) {
-                                                    MessageManager.sendFMessage(
-                                                            player,
-                                                            ConfigC.normal_ingameNowSolid,
-                                                            "block-" + block.getType().name().replaceAll("_", "").replaceAll("BLOCK", "").toLowerCase() + ":"
-                                                                    + block.getDurability());
-                                                } else {
-                                                    MessageManager.sendFMessage(player, ConfigC.normal_ingameNowSolid, "block-"
-                                                            + block.getType().name().replaceAll("_", "").replaceAll("BLOCK", "").toLowerCase());
-                                                }
+                                                String blockName = block.getType().name();
+                                                blockName = WordUtils.capitalizeFully(blockName.replace("_", " "));
+                                                MessageManager.sendFMessage(player, ConfigC.normal_ingameNowSolid, "block-"
+                                                        + blockName);
                                             }
                                             for (Player pl : Bukkit.getOnlinePlayers()) {
                                                 if (!pl.equals(player)) {
-                                                    pl.hidePlayer(player);
-                                                    pl.sendBlockChange(pBlock.getLocation(), block.getType(), (byte) block.getDurability());
+                                                    pl.hidePlayer(this, player);
+                                                    pl.sendBlockChange(pBlock.getLocation(), block.getType().createBlockData());
                                                 }
                                             }
                                         } else {
@@ -454,7 +433,11 @@ public class BlockHunt extends JavaPlugin implements Listener {
 
                 for (Player pl : arena.playersInArena) {
                     pl.setLevel(arena.timer);
-                    pl.setGameMode(GameMode.SURVIVAL);
+                    if (arena.seekers.contains(pl)) {
+                        pl.setGameMode(GameMode.SURVIVAL);
+                    } else {
+                        pl.setGameMode(GameMode.ADVENTURE);
+                    }
                 }
             }
             SignsHandler.updateSigns(); //TODO Only do this when needed (gamestate change or player count change)
@@ -467,18 +450,18 @@ public class BlockHunt extends JavaPlugin implements Listener {
 			ArenaHandler.stopArena(arena, cause, ConfigC.warning_arenaStopped);
 		}
 
-		MessageManager.sendFMessage(null, ConfigC.log_disabledPlugin, "name-" + BlockHunt.pdfFile.getName(), "version-" + BlockHunt.pdfFile.getVersion(), "autors-"
+		MessageManager.sendFMessage(null, ConfigC.log_disabledPlugin, "name-" + BlockHunt.pdfFile.getName(), "version-" + BlockHunt.pdfFile.getVersion(), "authors-"
 				+ BlockHunt.pdfFile.getAuthors().get(0));
 	}
 
 	/**
 	 * Args to String. Makes 1 string.
-	 * 
+	 *
 	 * @param input
 	 *            String list which should be converted to a string.
 	 * @param startArg
 	 *            Start on this length.
-	 * 
+	 *
 	 * @return The converted string.
 	 */
 	public static String stringBuilder(String[] input, int startArg) {
@@ -539,7 +522,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
 				}
 			}
 		}
-		new CMDnotfound().execute(player,cmd,label, args);;
+		new CMDnotfound().execute(player,cmd,label, args);
 		return true;
 	}
 
@@ -559,7 +542,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
 
 	/**
 	 * Short a String for like the Scoreboard title.
-	 * 
+	 *
 	 * @param string
 	 *            String to be shorten.
 	 * @param maxLenght
