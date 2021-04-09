@@ -20,6 +20,10 @@ public class EndArenaEvent extends Event {
         this.arena = arena;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public List<Player> getWinners() {
         return winners;
     }
@@ -33,10 +37,6 @@ public class EndArenaEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 

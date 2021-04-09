@@ -11,16 +11,16 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class OnBlockBreakEvent implements Listener {
 
-	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-	public void onBlockBreakEvent(BlockBreakEvent event) {
-		// Early exit if no one is in any arena
-		if (ArenaHandler.noPlayersInArenas()) return;
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onBlockBreakEvent(BlockBreakEvent event) {
+        // Early exit if no one is in any arena
+        if (ArenaHandler.noPlayersInArenas()) return;
 
-		Player player = event.getPlayer();
-		for (Arena arena : MemoryStorage.arenaList) {
-			if (arena.playersInArena.contains(player)) {
-				event.setCancelled(true);
-			}
-		}
-	}
+        Player player = event.getPlayer();
+        for (Arena arena : MemoryStorage.arenaList) {
+            if (arena.playersInArena.contains(player)) {
+                event.setCancelled(true);
+            }
+        }
+    }
 }

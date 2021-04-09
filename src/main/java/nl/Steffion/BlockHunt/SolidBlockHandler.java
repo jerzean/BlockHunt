@@ -4,7 +4,6 @@ import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.MiscDisguise;
 import nl.Steffion.BlockHunt.Managers.MessageManager;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,47 +15,59 @@ import org.bukkit.inventory.ItemStack;
 
 public class SolidBlockHandler {
 
-	public static void makePlayerUnsolid(Player player) {
-		ItemStack block = player.getInventory().getItem(8);
-		if (block == null) {
-			player.sendMessage(ChatColor.RED + "Unable to hide you because your inventory block is missing!");
-			System.out.println("[BlockHunt] ERROR: " + player.getName() + " could not be hidden because their inventory block was missing!");
-			return;
-		}
-		
-		Block pBlock = player.getLocation().getBlock();
+    public static void makePlayerUnsolid(Player player) {
+        Arena arena = MemoryStorage.arenaList.stream().filter(arena1 -> arena1.playersInArena.contains(player)).findFirst().orElse(null);
 
-		if (MemoryStorage.hiddenLoc.get(player) != null) {
-			pBlock = MemoryStorage.hiddenLoc.get(player).getBlock();
-		}
+        if (arena == null) {
+            player.sendMessage(ChatColor.RED + "Arena is null !");
+            System.out.println("[BlockHunt] ERROR: " + player.getName() + " Arena is null !");
+            return;
+        }
 
-		block.setAmount(5);
-		for (Player pl : Bukkit.getOnlinePlayers()) {
-			if (!pl.equals(player)) {
-				if (MemoryStorage.hiddenLocWater.get(player) != null) {
-					if (MemoryStorage.hiddenLocWater.get(player)) {
-						pl.sendBlockChange(pBlock.getLocation(), Bukkit.createBlockData(Material.WATER));
-					} else {
-						pl.sendBlockChange(pBlock.getLocation(), Bukkit.createBlockData(Material.AIR));
-					}
-				} else {
-					pl.sendBlockChange(pBlock.getLocation(), Bukkit.createBlockData(Material.AIR));
-				}
+        ItemStack itemBlock = player.getInventory().getItem(8);
 
-				MemoryStorage.hiddenLocWater.remove(player);
-			}
-		}
+        if (itemBlock == null) {
+            player.sendMessage(ChatColor.RED + "Unable to hide you because your inventory block is missing!");
+            System.out.println("[BlockHunt] ERROR: " + player.getName() + " could not be hidden because their inventory block was missing!");
+            return;
+        }
 
-		player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
-		block.removeEnchantment(Enchantment.DURABILITY);
+        Block pBlock = null;
 
-		for (Player playerShow : Bukkit.getOnlinePlayers()) {
-			playerShow.showPlayer(BlockHunt.plugin, player);
-		}
+        if (MemoryStorage.hiddenLoc.get(player) != null) {
+            pBlock = MemoryStorage.hiddenLoc.get(player).getBlock();
+        }
 
-		MiscDisguise disguise = new MiscDisguise(DisguiseType.FALLING_BLOCK, block.getType());
-		DisguiseAPI.disguiseToAll(player, disguise);
+        itemBlock.setAmount(5);
 
-		MessageManager.sendFMessage(player, ConfigC.normal_ingameNoMoreSolid);
-	}
+        boolean isWater = MemoryStorage.hiddenLocWater.getOrDefault(player, false);
+
+        if (pBlock != null) {
+            Block finalPBlock = pBlock;
+
+            arena.playersInArena.forEach(arenaPlayer -> {
+                if (!player.equals(arenaPlayer)) {
+                    if (isWater) {
+                        arenaPlayer.sendBlockChange(finalPBlock.getLocation(), Bukkit.createBlockData(Material.WATER));
+                        //player.sendBlockChange(pBlock.getLocation(), Bukkit.createBlockData(Material.WATER));
+                    } else {
+                        arenaPlayer.sendBlockChange(finalPBlock.getLocation(), Bukkit.createBlockData(Material.AIR));
+                        //player.sendBlockChange(pBlock.getLocation(), Bukkit.createBlockData(Material.AIR));
+                    }
+
+                    arenaPlayer.showPlayer(BlockHunt.plugin, player);
+                }
+            });
+        }
+
+        MemoryStorage.hiddenLocWater.remove(player);
+        MemoryStorage.hiddenLoc.remove(player);
+
+        player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
+        itemBlock.removeEnchantment(Enchantment.DURABILITY);
+
+        MiscDisguise disguise = new MiscDisguise(DisguiseType.FALLING_BLOCK, itemBlock.getType());
+        DisguiseAPI.disguiseToPlayers(player, disguise, arena.playersInArena);
+        MessageManager.sendFMessage(player, ConfigC.normal_ingameNoMoreSolid);
+    }
 }
