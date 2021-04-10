@@ -3,6 +3,7 @@ package nl.Steffion.BlockHunt;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.MiscDisguise;
+import me.libraryaddict.disguise.disguisetypes.watchers.FallingBlockWatcher;
 import nl.Steffion.BlockHunt.Arena.ArenaState;
 import nl.Steffion.BlockHunt.Commands.*;
 import nl.Steffion.BlockHunt.Listeners.*;
@@ -25,10 +26,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class BlockHunt extends JavaPlugin implements Listener {
     /**
@@ -46,25 +50,11 @@ public class BlockHunt extends JavaPlugin implements Listener {
     public static PluginDescriptionFile pdfFile;
     public static BlockHunt plugin;
 
-    @SuppressWarnings("serial")
-    public static List<String> BlockHuntCMD = new ArrayList<String>() {
-        {
-            add("info");
-            add("help");
-            add("reload");
-            add("join");
-            add("leave");
-            add("list");
-            add("shop");
-            add("start");
-            add("wand");
-            add("create");
-            add("set");
-            add("setwarp");
-            add("remove");
-            add("tokens");
-        }
-    };
+    public static final List<String> blockHuntMainSuggestion = Arrays.asList("info", "help", "reload", "join", "leave", "list", "shop",
+            "start", "wand", "create", "set", "setwarp", "remove", "tokens");
+
+    public static final List<String> blockHuntWarpChoice = Arrays.asList("lobby", "hiders", "seekers", "spawn");
+
 
     public static CommandManager CMD;
     public static CommandManager CMDinfo;
@@ -144,37 +134,30 @@ public class BlockHunt extends JavaPlugin implements Listener {
 
         ConfigManager.newFiles();
 
-        CMD = new CommandManager("BlockHunt", "BlockHunt", null, null, Permissions.info, ConfigC.help_info, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_info), BlockHuntCMD,
+        CMD = new CommandManager("BlockHunt", "BlockHunt", null, null, Permissions.info, ConfigC.help_info, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_info),
                 new CMDinfo(), null);
-        CMDinfo = new CommandManager("BlockHunt INFO", "BlockHunt", "info", "i", Permissions.info, ConfigC.help_info, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_info),
-                BlockHuntCMD, new CMDinfo(), "/BlockHunt [info|i]");
-        CMDhelp = new CommandManager("BlockHunt HELP", "BlockHunt", "help", "h", Permissions.help, ConfigC.help_help, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_help),
-                BlockHuntCMD, new CMDhelp(), "/BlockHunt <help|h> [page number]");
+        CMDinfo = new CommandManager("BlockHunt INFO", "BlockHunt", "info", "i", Permissions.info, ConfigC.help_info, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_info), new CMDinfo(), "/BlockHunt [info|i]");
+        CMDhelp = new CommandManager("BlockHunt HELP", "BlockHunt", "help", "h", Permissions.help, ConfigC.help_help, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_help), new CMDhelp(), "/BlockHunt <help|h> [page number]");
         CMDreload = new CommandManager("BlockHunt RELOAD", "BlockHunt", "reload", "r", Permissions.reload, ConfigC.help_reload,
-                (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_reload), BlockHuntCMD, new CMDreload(), "/BlockHunt <reload|r>");
-        CMDjoin = new CommandManager("BlockHunt JOIN", "BlockHunt", "join", "j", Permissions.join, ConfigC.help_join, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_join),
-                BlockHuntCMD, new CMDjoin(), "/BlockHunt <join|j> <arenaname>");
+                (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_reload), new CMDreload(), "/BlockHunt <reload|r>");
+        CMDjoin = new CommandManager("BlockHunt JOIN", "BlockHunt", "join", "j", Permissions.join, ConfigC.help_join, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_join), new CMDjoin(), "/BlockHunt <join|j> <arenaname>");
         CMDleave = new CommandManager("BlockHunt LEAVE", "BlockHunt", "leave", "l", Permissions.leave, ConfigC.help_leave,
-                (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_leave), BlockHuntCMD, new CMDleave(), "/BlockHunt <leave|l>");
-        CMDlist = new CommandManager("BlockHunt LIST", "BlockHunt", "list", "li", Permissions.list, ConfigC.help_list, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_list),
-                BlockHuntCMD, new CMDlist(), "/BlockHunt <list|li>");
-        CMDshop = new CommandManager("BlockHunt SHOP", "BlockHunt", "shop", "sh", Permissions.shop, ConfigC.help_shop, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_shop),
-                BlockHuntCMD, new CMDshop(), "/BlockHunt <shop|sh>");
+                (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_leave), new CMDleave(), "/BlockHunt <leave|l>");
+        CMDlist = new CommandManager("BlockHunt LIST", "BlockHunt", "list", "li", Permissions.list, ConfigC.help_list, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_list), new CMDlist(), "/BlockHunt <list|li>");
+        CMDshop = new CommandManager("BlockHunt SHOP", "BlockHunt", "shop", "sh", Permissions.shop, ConfigC.help_shop, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_shop), new CMDshop(), "/BlockHunt <shop|sh>");
         CMDstart = new CommandManager("BlockHunt START", "BlockHunt", "start", "go", Permissions.start, ConfigC.help_start,
-                (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_start), BlockHuntCMD, new CMDstart(), "/BlockHunt <start|go> <arenaname>");
-        CMDwand = new CommandManager("BlockHunt WAND", "BlockHunt", "wand", "w", Permissions.create, ConfigC.help_wand, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_wand),
-                BlockHuntCMD, new CMDwand(), "/BlockHunt <wand|w>");
+                (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_start), new CMDstart(), "/BlockHunt <start|go> <arenaname>");
+        CMDwand = new CommandManager("BlockHunt WAND", "BlockHunt", "wand", "w", Permissions.create, ConfigC.help_wand, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_wand), new CMDwand(), "/BlockHunt <wand|w>");
         CMDcreate = new CommandManager("BlockHunt CREATE", "BlockHunt", "create", "c", Permissions.create, ConfigC.help_create,
-                (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_create), BlockHuntCMD, new CMDcreate(), "/BlockHunt <create|c> <arenaname>");
-        CMDset = new CommandManager("BlockHunt SET", "BlockHunt", "set", "s", Permissions.set, ConfigC.help_set, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_set),
-                BlockHuntCMD, new CMDset(), "/BlockHunt <set|s> <arenaname>");
+                (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_create), new CMDcreate(), "/BlockHunt <create|c> <arenaname>");
+        CMDset = new CommandManager("BlockHunt SET", "BlockHunt", "set", "s", Permissions.set, ConfigC.help_set, (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_set), new CMDset(), "/BlockHunt <set|s> <arenaname>");
         CMDsetwarp = new CommandManager("BlockHunt SETWARP", "BlockHunt", "setwarp", "sw", Permissions.setwarp, ConfigC.help_setwarp,
-                (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_setwarp), BlockHuntCMD, new CMDsetwarp(),
+                (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_setwarp), new CMDsetwarp(),
                 "/BlockHunt <setwarp|sw> <lobby|hiders|seekers|spawn> <arenaname>");
         CMDremove = new CommandManager("BlockHunt REMOVE", "BlockHunt", "remove", "delete", Permissions.remove, ConfigC.help_remove,
-                (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_remove), BlockHuntCMD, new CMDremove(), "/BlockHunt <remove|delete> <arenaname>");
+                (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_remove), new CMDremove(), "/BlockHunt <remove|delete> <arenaname>");
         CMDtokens = new CommandManager("BlockHunt TOKENS", "BlockHunt", "tokens", "t", Permissions.tokens, ConfigC.help_tokens,
-                (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_tokens), BlockHuntCMD, new CMDtokens(), "/BlockHunt <tokens|t> <set|add|take> <playername> <amount>");
+                (Boolean) MemoryStorage.config.get(ConfigC.commandEnabled_tokens), new CMDtokens(), "/BlockHunt <tokens|t> <set|add|take> <playername> <amount>");
 
         if (!getServer().getPluginManager().isPluginEnabled("LibsDisguises")) {
             MessageManager.broadcastFMessage(ConfigC.error_libsDisguisesNotInstalled);
@@ -272,41 +255,6 @@ public class BlockHunt extends JavaPlugin implements Listener {
 
                         }
 
-                        //Teleport seekers and set Item
-                        for (Player player : arena.seekers) {
-                            if (player.getInventory().getItem(0) == null || player.getInventory().getItem(0).getType() != Material.DIAMOND_SWORD) {
-                                player.getInventory().clear();
-                                ItemStack i = new ItemStack(Material.DIAMOND_SWORD, 1);
-                                i.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 8);
-                                ItemMeta meta = i.getItemMeta();
-                                meta.setUnbreakable(true);
-                                i.setItemMeta(meta);
-                                player.getInventory().setItem(0, i);
-                                player.getInventory().setHelmet(new ItemStack(Material.IRON_HELMET, 1));
-                                player.getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE, 1));
-                                player.getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS, 1));
-                                player.getInventory().setBoots(new ItemStack(Material.IRON_BOOTS, 1));
-                                ItemStack infBow = new ItemStack(Material.BOW, 1);
-                                ItemMeta bowMeta = infBow.getItemMeta();
-                                bowMeta.setUnbreakable(true);
-                                infBow.setItemMeta(bowMeta);
-                                infBow.addEnchantment(Enchantment.ARROW_INFINITE, 1);
-                                player.getInventory().setItem(1, infBow);
-                                player.getInventory().setItem(9, new ItemStack(Material.ARROW, 1));
-                                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 1);
-                            }
-
-
-                            if (MemoryStorage.seekertime.get(player) != null) {
-                                MemoryStorage.seekertime.put(player, MemoryStorage.seekertime.get(player) - 1);
-                                if (MemoryStorage.seekertime.get(player) <= 0) {
-                                    PlayerHandler.teleport(player, arena.hidersWarp);
-                                    MemoryStorage.seekertime.remove(player);
-                                    ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameSeekerSpawned, "playername-" + player.getName());
-                                }
-                            }
-                        }
-
                         //Hiders init and tp
                         for (Player arenaPlayer : arena.playersInArena) {
                             //If player is not a seeker
@@ -321,7 +269,10 @@ public class BlockHunt extends JavaPlugin implements Listener {
                                 }
 
                                 MiscDisguise disguise = new MiscDisguise(DisguiseType.FALLING_BLOCK, block.getType());
+                                ((FallingBlockWatcher) disguise.getWatcher()).setGridLocked(false);
+                                disguise.getWatcher().setNoGravity(true);
                                 DisguiseAPI.disguiseToPlayers(arenaPlayer, disguise, arena.playersInArena);
+
                                 PlayerHandler.teleport(arenaPlayer, arena.hidersWarp);
                                 ItemStack blockCount = new ItemStack(block.getType(), 5);
                                 arenaPlayer.getInventory().setItem(8, blockCount);
@@ -442,26 +393,72 @@ public class BlockHunt extends JavaPlugin implements Listener {
                             ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameArenaEnd, "1-1");
                         }
 
+                        //Teleport seekers and set Item
+                        for (Player player : arena.seekers) {
+                            if (player.getInventory().getItem(0) == null || player.getInventory().getItem(0).getType() != Material.DIAMOND_SWORD) {
+                                player.getInventory().clear();
+                                ItemStack i = new ItemStack(Material.DIAMOND_SWORD, 1);
+                                i.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 8);
+                                ItemMeta meta = i.getItemMeta();
+                                meta.setUnbreakable(true);
+                                i.setItemMeta(meta);
+                                player.getInventory().setItem(0, i);
+                                player.getInventory().setHelmet(new ItemStack(Material.IRON_HELMET, 1));
+                                player.getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE, 1));
+                                player.getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS, 1));
+                                player.getInventory().setBoots(new ItemStack(Material.IRON_BOOTS, 1));
+                                ItemStack infBow = new ItemStack(Material.BOW, 1);
+                                ItemMeta bowMeta = infBow.getItemMeta();
+                                bowMeta.setUnbreakable(true);
+                                infBow.setItemMeta(bowMeta);
+                                infBow.addEnchantment(Enchantment.ARROW_INFINITE, 1);
+                                player.getInventory().setItem(1, infBow);
+                                player.getInventory().setItem(9, new ItemStack(Material.ARROW, 1));
+                                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 1);
+                            }
+
+
+                            if (MemoryStorage.seekertime.get(player) != null) {
+                                MemoryStorage.seekertime.put(player, MemoryStorage.seekertime.get(player) - 1);
+                                if (MemoryStorage.seekertime.get(player) <= 0) {
+                                    PlayerHandler.teleport(player, arena.hidersWarp);
+                                    MemoryStorage.seekertime.remove(player);
+                                    ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameSeekerSpawned, "playername-" + player.getName());
+                                }
+                            }
+                        }
+
                         //Movement Player
                         for (Player player : arena.playersInArena) {
                             if (!arena.seekers.contains(player)) {
                                 Location pLoc = player.getLocation();
-                                ItemStack itemBlock = player.getInventory().getItem(8);
 
-                                if (itemBlock == null) {
+                                if (player.getInventory().getItem(8) == null) {
                                     if (MemoryStorage.pBlock.get(player) != null) {
-                                        itemBlock = MemoryStorage.pBlock.get(player);
-                                        player.getInventory().setItem(8, itemBlock);
+                                        player.getInventory().setItem(8, MemoryStorage.pBlock.get(player));
                                         player.updateInventory();
                                     }
                                 }
 
-                                if (itemBlock.getAmount() > 1) {
-                                    itemBlock.setAmount(itemBlock.getAmount() - 1);
-                                } else if (!MemoryStorage.hiddenLoc.containsKey(player)) {
-                                    Block pBlock = player.getLocation().getBlock();
-                                    BlockData pBlockData = pBlock.getBlockData();
+                                ItemStack itemBlock = player.getInventory().getItem(8) == null ? MemoryStorage.pBlock.get(player) : player.getInventory().getItem(8);
 
+                                Block pBlock = player.getLocation().getBlock();
+                                BlockData pBlockData = pBlock.getBlockData();
+
+                                if (!(pBlockData.getMaterial().isAir() || pBlockData.getMaterial() == Material.WATER))
+                                    MessageManager.sendFMessage(player, ConfigC.warning_ingameNoSolidPlace);
+
+                                //Hiders Want to disguise
+                                if (itemBlock.getAmount() > 1) {
+                                    long lastMove = System.currentTimeMillis() - MemoryStorage.lastMove.getOrDefault(player, System.currentTimeMillis());
+
+                                    //Timer to disguise start
+                                    if ((pBlockData.getMaterial().isAir() || pBlockData.getMaterial() == Material.WATER) && lastMove > 500)
+                                        itemBlock.setAmount(itemBlock.getAmount() - 1);
+                                    else itemBlock.setAmount(5); // Nop, moved or other reset the timer
+
+                                } else if (!MemoryStorage.hiddenLoc.containsKey(player)) {
+                                    //Disguise the player !
                                     if (pBlockData.getMaterial().isAir() || pBlockData.getMaterial() == Material.WATER) {
                                         if (pBlockData.getMaterial() == Material.WATER) {
                                             MemoryStorage.hiddenLocWater.put(player, true);
@@ -471,7 +468,8 @@ public class BlockHunt extends JavaPlugin implements Listener {
 
                                         if (DisguiseAPI.isDisguised(player)) {
                                             DisguiseAPI.undisguiseToAll(player);
-                                            for (Player pl : Bukkit.getOnlinePlayers()) {
+
+                                            for (Player pl : arena.playersInArena) {
                                                 if (!pl.equals(player)) {
                                                     pl.hidePlayer(this, player);
                                                     pl.sendBlockChange(pBlock.getLocation(), itemBlock.getType().createBlockData());
@@ -487,7 +485,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
                                             //player.sendBlockChange(pBlock.getLocation(), block.getType().createBlockData());
                                         }
 
-                                        for (Player pl : Bukkit.getOnlinePlayers()) {
+                                        for (Player pl : arena.playersInArena) {
                                             if (!pl.equals(player)) {
                                                 pl.hidePlayer(this, player);
                                                 pl.sendBlockChange(pBlock.getLocation(), itemBlock.getType().createBlockData());
@@ -585,15 +583,32 @@ public class BlockHunt extends JavaPlugin implements Listener {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 
-        for (CommandManager command : MemoryStorage.commands) {
-            if (cmd.getName().equalsIgnoreCase(command.label)) {
-                if (args.length == 1) {
-                    return command.mainTABlist;
+        if (cmd.getName().equalsIgnoreCase("blockhunt")) {
+            if (args.length == 1) {
+                return StringUtil.copyPartialMatches(args[0], blockHuntMainSuggestion, new ArrayList<>());
+            } else if (args.length == 2) {
+                String entry = args[0];
+                if (entry.equalsIgnoreCase("join") || entry.equalsIgnoreCase("j")
+                        || entry.equalsIgnoreCase("start") || entry.equalsIgnoreCase("go")
+                        || entry.equalsIgnoreCase("set") || entry.equalsIgnoreCase("s")
+                        || entry.equalsIgnoreCase("remove") || entry.equalsIgnoreCase("delete")) {
+                    return StringUtil.copyPartialMatches(args[1], getArenaNameList(), new ArrayList<>());
+                } else if (entry.equalsIgnoreCase("setwarp") || entry.equalsIgnoreCase("sw")) {
+                    return StringUtil.copyPartialMatches(args[1], blockHuntWarpChoice, new ArrayList<>());
+                }
+            } else if (args.length == 3) {
+                String entry = args[1];
+                if (blockHuntWarpChoice.contains(entry.toLowerCase())) {
+                    return StringUtil.copyPartialMatches(args[2], getArenaNameList(), new ArrayList<>());
                 }
             }
         }
 
         return null;
+    }
+
+    public List<String> getArenaNameList() {
+        return MemoryStorage.arenaList.stream().map(arena -> arena.arenaName).collect(Collectors.toList());
     }
 
     /*
