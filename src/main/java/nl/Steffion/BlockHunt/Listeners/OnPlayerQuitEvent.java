@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class OnPlayerQuitEvent implements Listener {
@@ -14,12 +15,17 @@ public class OnPlayerQuitEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-
+        //Disguise.unDisguise(player);
         for (Arena arena : MemoryStorage.arenaList) {
             if (arena.playersInArena.contains(player)) {
                 ArenaHandler.playerLeaveArena(player, true, true);
             }
         }
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        //Disguise.disguise(event.getPlayer(), new ItemStack(Material.STONE));
     }
 
 //	@EventHandler(priority = EventPriority.HIGHEST)

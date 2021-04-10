@@ -14,6 +14,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.ArrayList;
@@ -21,6 +22,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class OnEntityDamageByEntityEvent implements Listener {
+
+    @EventHandler
+    public void onProjectileHit(ProjectileHitEvent event) {
+        //TODO Make This !
+    }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {

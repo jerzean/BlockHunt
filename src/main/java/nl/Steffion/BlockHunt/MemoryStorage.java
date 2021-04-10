@@ -55,6 +55,8 @@ public class MemoryStorage {
     public static HashMap<Player, ItemStack> choosenBlock = new HashMap<>();
     public static HashMap<Player, Boolean> choosenSeeker = new HashMap<>();
 
+    public static HashMap<Player, Long> lastMove = new HashMap<>();
+
     public static HashMap<Player, ItemStack> pBlock = new HashMap<>();
     //Hidden Location
     public static HashMap<Player, Location> hiddenLoc = new HashMap<>();

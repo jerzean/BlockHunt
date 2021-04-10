@@ -3,6 +3,7 @@ package nl.Steffion.BlockHunt;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.MiscDisguise;
+import me.libraryaddict.disguise.disguisetypes.watchers.FallingBlockWatcher;
 import nl.Steffion.BlockHunt.Managers.MessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -49,10 +50,8 @@ public class SolidBlockHandler {
                 if (!player.equals(arenaPlayer)) {
                     if (isWater) {
                         arenaPlayer.sendBlockChange(finalPBlock.getLocation(), Bukkit.createBlockData(Material.WATER));
-                        //player.sendBlockChange(pBlock.getLocation(), Bukkit.createBlockData(Material.WATER));
                     } else {
                         arenaPlayer.sendBlockChange(finalPBlock.getLocation(), Bukkit.createBlockData(Material.AIR));
-                        //player.sendBlockChange(pBlock.getLocation(), Bukkit.createBlockData(Material.AIR));
                     }
 
                     arenaPlayer.showPlayer(BlockHunt.plugin, player);
@@ -67,6 +66,8 @@ public class SolidBlockHandler {
         itemBlock.removeEnchantment(Enchantment.DURABILITY);
 
         MiscDisguise disguise = new MiscDisguise(DisguiseType.FALLING_BLOCK, itemBlock.getType());
+        ((FallingBlockWatcher) disguise.getWatcher()).setGridLocked(false);
+        disguise.getWatcher().setNoGravity(true);
         DisguiseAPI.disguiseToPlayers(player, disguise, arena.playersInArena);
         MessageManager.sendFMessage(player, ConfigC.normal_ingameNoMoreSolid);
     }

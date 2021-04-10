@@ -6,6 +6,7 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,12 +25,20 @@ public class OnPlayerMoveEvent implements Listener {
             if (arena.playersInArena.contains(player)) {
                 if (arena.gameState == ArenaState.INGAME) {
                     if (!arena.seekers.contains(player)) {
-                        Location moveLocation = event.getTo() == null ? event.getFrom() : event.getTo();
-                        if (MemoryStorage.hiddenLoc.containsKey(player)) {
-                            Block currentBlock = player.getLocation().getBlock();
-                            Block moveBlock = moveLocation.getBlock();
+                        Location moveLocation = event.getTo() != null ? event.getTo() : event.getFrom();
 
-                            if (currentBlock.getX() != moveBlock.getX() && currentBlock.getY() != moveBlock.getY() && currentBlock.getZ() != moveBlock.getZ()) {
+                        Block currentBlock = event.getFrom().getBlock();
+                        Block moveBlock = moveLocation.getBlock();
+
+                        if (currentBlock.getX() != moveBlock.getX() || currentBlock.getY() != moveBlock.getY() || currentBlock.getZ() != moveBlock.getZ()) {
+                            MemoryStorage.lastMove.remove(player);
+                            MemoryStorage.lastMove.put(player, System.currentTimeMillis());
+                        }
+
+                        //If player is hide
+                        if (MemoryStorage.hiddenLoc.containsKey(player)) {
+                            Block hidedLoc = MemoryStorage.hiddenLoc.get(player).getBlock();
+                            if (hidedLoc.getX() != moveBlock.getX() || hidedLoc.getY() != moveBlock.getY() || hidedLoc.getZ() != moveBlock.getZ()) {
                                 SolidBlockHandler.makePlayerUnsolid(player);
                                 ItemStack itemBlock = player.getInventory().getItem(8);
 
@@ -41,11 +50,13 @@ public class OnPlayerMoveEvent implements Listener {
                                     }
                                 }
 
+                                assert itemBlock != null;
+
+                                itemBlock.removeEnchantment(Enchantment.DURABILITY);
                                 itemBlock.setAmount(5);
                             }
                         }
                     }
-
 
                     if (arena.pos1 == null || arena.pos2 == null) {
                         BlockHunt.plugin.getLogger().info("Arena:" +
