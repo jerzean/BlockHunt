@@ -35,7 +35,7 @@ public class ScoreboardHandler {
             Score hiders = object.getScore(temp);
             hiders.setScore(arena.playersInArena.size() - arena.seekers.size());
 
-            if (arena.gameState == ArenaState.INGAME) {
+            if (arena.gameState == ArenaState.STARTED) {
                 for (Player pl : arena.playersInArena) {
                     pl.setScoreboard(board);
                 }
@@ -65,7 +65,7 @@ public class ScoreboardHandler {
             Score hiders = object.getScore(temp);
             hiders.setScore(arena.playersInArena.size() - arena.seekers.size());
 
-            if (arena.gameState == ArenaState.INGAME) {
+            if (arena.gameState == ArenaState.STARTED) {
                 for (Player pl : arena.playersInArena) {
                     pl.setScoreboard(board);
                 }

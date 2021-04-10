@@ -26,8 +26,6 @@ public class ConfigManager {
     private final String fileName;
     private final File file;
     private final FileConfiguration fileC;
-    private final ConfigurationSection fileCS;
-    private final File fileLocation;
 
     /**
      * Use this class to create an automated config file.
@@ -38,10 +36,8 @@ public class ConfigManager {
     public ConfigManager(String fileName) {
         this.fileName = fileName;
         this.file = new File(BlockHunt.plugin.getDataFolder(), fileName + ".yml");
-        this.fileLocation = BlockHunt.plugin.getDataFolder();
         this.fileC = new YamlConfiguration();
         this.checkFile();
-        this.fileCS = fileC.getConfigurationSection("");
         this.load();
     }
 
@@ -57,10 +53,8 @@ public class ConfigManager {
         this.fileName = fileName;
         File directory = new File(BlockHunt.plugin.getDataFolder(), subdirectory);
         this.file = new File(directory, fileName + ".yml");
-        this.fileLocation = directory;
         this.fileC = new YamlConfiguration();
         this.checkFile();
-        this.fileCS = fileC.getConfigurationSection("");
         this.load();
     }
 

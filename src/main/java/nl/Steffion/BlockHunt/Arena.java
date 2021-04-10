@@ -187,8 +187,6 @@ public class Arena implements ConfigurationSerializable {
     public enum ArenaState {
         WAITING,
         STARTING,
-        INGAME,
-        RESTARTING,
-        DISABLED
+        STARTED
     }
 }

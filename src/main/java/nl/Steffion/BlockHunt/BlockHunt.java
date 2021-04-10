@@ -107,8 +107,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
 
-        getServer().getPluginManager().registerEvents(new OnBlockBreakEvent(), this);
-        getServer().getPluginManager().registerEvents(new OnBlockPlaceEvent(), this);
+        getServer().getPluginManager().registerEvents(new BlockEvent(), this);
         getServer().getPluginManager().registerEvents(new OnEntityDamageByEntityEvent(), this);
         getServer().getPluginManager().registerEvents(new OnEntityDamageEvent(), this);
         getServer().getPluginManager().registerEvents(new OnFoodLevelChangeEvent(), this);
@@ -212,7 +211,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
                         }
                     } else {
                         //Start the game
-                        arena.gameState = ArenaState.INGAME;
+                        arena.gameState = ArenaState.STARTED;
                         arena.timer = arena.gameTime;
                         ArenaHandler.sendFMessage(arena, ConfigC.normal_lobbyArenaStarted, "secs-" + arena.waitingTimeSeeker);
 
@@ -287,7 +286,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
                 }
 
                 //If game has been started
-                if (arena.gameState == ArenaState.INGAME) {
+                if (arena.gameState == ArenaState.STARTED) {
                     arena.timer = arena.timer - 1;
                     //If game is running
                     if (arena.timer > 0) {
@@ -322,7 +321,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
                             }
 
                             Bukkit.getScheduler().runTaskTimer(this, bukkitTask -> {
-                                if (arena.gameState != ArenaState.INGAME) {
+                                if (arena.gameState != ArenaState.STARTED) {
                                     bukkitTask.cancel();
                                     return;
                                 }

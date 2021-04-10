@@ -2,7 +2,6 @@ package nl.Steffion.BlockHunt.Listeners;
 
 import nl.Steffion.BlockHunt.Arena;
 import nl.Steffion.BlockHunt.ArenaHandler;
-import nl.Steffion.BlockHunt.MemoryStorage;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,37 +20,36 @@ public class OnEntityDamageEvent implements Listener {
         Entity ent = event.getEntity();
         if (ent instanceof Player) {
             Player player = (Player) event.getEntity();
-            for (Arena arena : MemoryStorage.arenaList) {
-                if (arena.playersInArena.contains(player)) {
-                    DamageCause cause = event.getCause();
-                    switch (cause) {
-                        case ENTITY_ATTACK:
-                        case PROJECTILE:
-                            // Do nothing about damage from an entity
-                            // Any entity damage that makes it to here was already allowed by the EntityDamageByEntity event
-                            break;
-                        case FALL:
-                            // Should we prevent the fall damage?
-                            if (arena.seekers.contains(player)) {
-                                if (!arena.seekersTakeFallDamage) {
-                                    // Prevent seeker fall damage (if configured)
-                                    event.setCancelled(true);
-                                    return;
-                                }
-                            } else {
-                                if (!arena.hidersTakeFallDamage) {
-                                    // Prevent hider fall damage (if configured)
-                                    event.setCancelled(true);
-                                    return;
-                                }
+            Arena arena = ArenaHandler.getArenaByPlayer(player);
+
+            if (arena != null) {
+                DamageCause cause = event.getCause();
+                switch (cause) {
+                    case ENTITY_ATTACK:
+                    case PROJECTILE:
+                        // Do nothing about damage from an entity
+                        // Any entity damage that makes it to here was already allowed by the EntityDamageByEntity event
+                        break;
+                    case FALL:
+                        // Should we prevent the fall damage?
+                        if (arena.seekers.contains(player)) {
+                            if (!arena.seekersTakeFallDamage) {
+                                // Prevent seeker fall damage (if configured)
+                                event.setCancelled(true);
+                                return;
                             }
-                            break;
-                        default:
-                            // Cancel all non-entity damage for all players (lava, drowning, fire, etc)
-                            event.setCancelled(true);
-                            break;
-                    }
-                    return;
+                        } else {
+                            if (!arena.hidersTakeFallDamage) {
+                                // Prevent hider fall damage (if configured)
+                                event.setCancelled(true);
+                                return;
+                            }
+                        }
+                        break;
+                    default:
+                        // Cancel all non-entity damage for all players (lava, drowning, fire, etc)
+                        event.setCancelled(true);
+                        break;
                 }
             }
         }

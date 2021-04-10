@@ -2,7 +2,6 @@ package nl.Steffion.BlockHunt.Listeners;
 
 import nl.Steffion.BlockHunt.Arena;
 import nl.Steffion.BlockHunt.ArenaHandler;
-import nl.Steffion.BlockHunt.MemoryStorage;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,12 +14,12 @@ public class OnPlayerQuitEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        Arena arena = ArenaHandler.getArenaByPlayer(player);
+
+        if (arena != null)
+            ArenaHandler.playerLeaveArena(player, true, true);
+
         //Disguise.unDisguise(player);
-        for (Arena arena : MemoryStorage.arenaList) {
-            if (arena.playersInArena.contains(player)) {
-                ArenaHandler.playerLeaveArena(player, true, true);
-            }
-        }
     }
 
     @EventHandler

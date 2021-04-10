@@ -1,7 +1,8 @@
 package nl.Steffion.BlockHunt.Listeners;
 
 import nl.Steffion.BlockHunt.Arena;
-import nl.Steffion.BlockHunt.MemoryStorage;
+import nl.Steffion.BlockHunt.ArenaHandler;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,12 +13,14 @@ public class OnFoodLevelChangeEvent implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onFoodLevelChangeEvent(FoodLevelChangeEvent event) {
-        Player player = (Player) event.getEntity();
+        HumanEntity humanEntity = event.getEntity();
 
-        for (Arena arena : MemoryStorage.arenaList) {
-            if (arena.playersInArena.contains(player)) {
+        if (humanEntity instanceof Player) {
+            Player player = (Player) humanEntity;
+            Arena arena = ArenaHandler.getArenaByPlayer(player);
+
+            if (arena != null)
                 event.setCancelled(true);
-            }
         }
     }
 }

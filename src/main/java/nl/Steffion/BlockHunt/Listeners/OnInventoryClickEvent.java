@@ -15,11 +15,13 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class OnInventoryClickEvent implements Listener {
 
     public static void updownButton(Player player, ItemStack item, Arena arena, ArenaType at, int option, int max, int min, int add, int remove) {
-        if (item.getItemMeta().getDisplayName().contains((String) MemoryStorage.messages.get(ConfigC.button_add2))) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null && meta.hasDisplayName() && meta.getDisplayName().contains((String) MemoryStorage.messages.get(ConfigC.button_add2))) {
             if (option < max) {
                 switch (at) {
                     case maxPlayers:
@@ -59,7 +61,7 @@ public class OnInventoryClickEvent implements Listener {
             } else {
                 MessageManager.sendFMessage(player, ConfigC.error_setTooHighNumber, "max-" + max);
             }
-        } else if (item.getItemMeta().getDisplayName().contains((String) MemoryStorage.messages.get(ConfigC.button_remove2))) {
+        } else if (meta != null && meta.hasDisplayName() && meta.getDisplayName().contains((String) MemoryStorage.messages.get(ConfigC.button_remove2))) {
             if (option > min) {
                 switch (at) {
                     case maxPlayers:
@@ -105,15 +107,14 @@ public class OnInventoryClickEvent implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onInventoryClickEvent(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
+        Arena arena = ArenaHandler.getArenaByPlayer(player);
 
-        for (Arena arena : MemoryStorage.arenaList) {
-            if (arena.playersInArena.contains(player)) {
-                event.setCancelled(true);
-            }
-        }
+        if (arena != null)
+            event.setCancelled(true);
 
         Inventory inv = event.getInventory();
         InventoryView invView = event.getView();
+
         if (inv.getType().equals(InventoryType.CHEST)) {
             if (invView.getTitle().contains("DisguiseBlocks")) {
                 if (event.getCurrentItem() != null) {
@@ -124,7 +125,6 @@ public class OnInventoryClickEvent implements Listener {
                         }
                     }
                 }
-
                 return;
             }
 
@@ -188,16 +188,14 @@ public class OnInventoryClickEvent implements Listener {
                     }
                 } else if (invView.getTitle().contains(MessageManager.replaceAll((String) MemoryStorage.config.get(ConfigC.shop_BlockHuntPassv2Name)))) {
                     event.setCancelled(true);
-                    if (event.getCurrentItem() != null) {
-                        if (event.getCurrentItem().getType().equals(Material.BLUE_WOOL)) {
-                            int i = 0;
-                            for (Arena arena : MemoryStorage.arenaList) {
-                                if (arena.playersInArena.contains(player)) {
-                                    for (Player playerCheck : arena.playersInArena) {
-                                        if (MemoryStorage.choosenSeeker.get(playerCheck) != null) {
-                                            if (MemoryStorage.choosenSeeker.get(playerCheck)) {
-                                                i = i + 1;
-                                            }
+                    if (arena != null) {
+                        if (event.getCurrentItem() != null) {
+                            if (event.getCurrentItem().getType().equals(Material.BLUE_WOOL)) {
+                                int i = 0;
+                                for (Player playerCheck : arena.playersInArena) {
+                                    if (MemoryStorage.choosenSeeker.get(playerCheck) != null) {
+                                        if (MemoryStorage.choosenSeeker.get(playerCheck)) {
+                                            i = i + 1;
                                         }
                                     }
                                 }
@@ -218,11 +216,10 @@ public class OnInventoryClickEvent implements Listener {
                                         MemoryStorage.shop.save();
                                     }
                                 }
-                            }
 
-                        } else if (event.getCurrentItem().getType().equals(Material.RED_WOOL)) {
-                            int i = 0;
-                            for (Arena arena : MemoryStorage.arenaList) {
+
+                            } else if (event.getCurrentItem().getType().equals(Material.RED_WOOL)) {
+                                int i = 0;
                                 if (arena.playersInArena.contains(player)) {
                                     for (Player playerCheck : arena.playersInArena) {
                                         if (MemoryStorage.choosenSeeker.get(playerCheck) != null) {
@@ -243,11 +240,10 @@ public class OnInventoryClickEvent implements Listener {
                                     inv.clear();
                                     if (MemoryStorage.shop.getFile().getInt(player.getName() + ".blockhuntpass") == 1) {
                                         MemoryStorage.shop.getFile().set(player.getName() + ".blockhuntpass", null);
-                                        MemoryStorage.shop.save();
                                     } else {
                                         MemoryStorage.shop.getFile().set(player.getName() + ".blockhuntpass", MemoryStorage.shop.getFile().getInt(player.getName() + ".blockhuntpass") - 1);
-                                        MemoryStorage.shop.save();
                                     }
+                                    MemoryStorage.shop.save();
                                 }
                             }
                         }
@@ -257,7 +253,7 @@ public class OnInventoryClickEvent implements Listener {
                     ItemStack item = event.getCurrentItem();
                     String arenaname = inv.getItem(0).getItemMeta().getDisplayName().replaceAll(MessageManager.replaceAll("%NBlockHunt arena: %A"), "");
 
-                    Arena arena = null;
+                    arena = null;
                     for (Arena arena2 : MemoryStorage.arenaList) {
                         if (arena2.arenaName.equalsIgnoreCase(arenaname)) {
                             arena = arena2;

@@ -4,20 +4,22 @@ version: ${plugin.version}
 api-version: ${spigot.api.version}
 authors:
   - Steffion
+  - MrBretzel
 description: An easy to set up, Hide and seek plugin. Hide as blocks from the killer seekers.
-softdepend: [ProtocolLib, Multiverse-Core, My Worlds]
+softdepend: [ ProtocolLib ]
+depend: [ ProtocolLib ]
 load: POSTWORLD
 commands:
   BlockHunt:
     usage: /<command>
     description: N/A
     aliases:
-        - bh
-        - prophunt
-        - ph
-        - hideandseek
-        - has
-        - hs
-        - seekandfind
-        - saf
-        - sf
+      - bh
+      - prophunt
+      - ph
+      - hideandseek
+      - has
+      - hs
+      - seekandfind
+      - saf
+      - sf

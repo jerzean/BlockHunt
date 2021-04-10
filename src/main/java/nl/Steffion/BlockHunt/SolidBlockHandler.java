@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 public class SolidBlockHandler {
 
     public static void makePlayerUnsolid(Player player) {
-        Arena arena = MemoryStorage.arenaList.stream().filter(arena1 -> arena1.playersInArena.contains(player)).findFirst().orElse(null);
+        Arena arena = ArenaHandler.getArenaByPlayer(player);
 
         if (arena == null) {
             player.sendMessage(ChatColor.RED + "Arena is null !");

@@ -1,7 +1,7 @@
 package nl.Steffion.BlockHunt.Listeners;
 
 import nl.Steffion.BlockHunt.Arena;
-import nl.Steffion.BlockHunt.MemoryStorage;
+import nl.Steffion.BlockHunt.ArenaHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,11 +13,9 @@ public class OnPlayerDropItemEvent implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
+        Arena arena = ArenaHandler.getArenaByPlayer(player);
 
-        for (Arena arena : MemoryStorage.arenaList) {
-            if (arena.playersInArena.contains(player)) {
-                event.setCancelled(true);
-            }
-        }
+        if (arena != null)
+            event.setCancelled(true);
     }
 }

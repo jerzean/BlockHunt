@@ -253,7 +253,7 @@ public class ArenaHandler {
                     ArenaHandler.sendFMessage(arena, ConfigC.warning_lobbyNeedAtleast, "1-" + arena.minPlayers);
                 }
 
-                if (arena.playersInArena.size() <= 1 && arena.gameState == ArenaState.INGAME) {
+                if (arena.playersInArena.size() <= 1 && arena.gameState == ArenaState.STARTED) {
                     if (arena.seekers.size() >= arena.playersInArena.size()) {
                         ArenaHandler.seekersWin(arena);
                     } else {
@@ -265,7 +265,7 @@ public class ArenaHandler {
                     ArenaHandler.seekersWin(arena);
                 }
 
-                if (arena.seekers.size() <= 0 && arena.gameState == ArenaState.INGAME) {
+                if (arena.seekers.size() <= 0 && arena.gameState == ArenaState.STARTED) {
                     Player seeker = arena.playersInArena.get(MemoryStorage.random.nextInt(arena.playersInArena.size()));
                     ArenaHandler.sendFMessage(arena, ConfigC.warning_ingameNEWSeekerChoosen, "seeker-" + seeker.getName());
                     ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameSeekerChoosen, "seeker-" + seeker.getName());
@@ -276,7 +276,7 @@ public class ArenaHandler {
                     seeker.getInventory().clear();
                     arena.seekers.add(seeker);
                     PlayerHandler.teleport(seeker, arena.seekersWarp);
-                    MemoryStorage.seekertime.put(seeker, arena.waitingTimeSeeker);
+                    MemoryStorage.seekertime.put(seeker, arena.waitingTimeSeeker / 2);
                     seeker.setWalkSpeed(0.3F);
 
                     // Fix for client not showing players after they join
@@ -449,5 +449,9 @@ public class ArenaHandler {
 
     public static boolean noPlayersInArenas() {
         return MemoryStorage.arenaList.stream().noneMatch(arena -> arena.playersInArena.size() > 0);
+    }
+
+    public static Arena getArenaByPlayer(Player player) {
+        return noPlayersInArenas() ? null : MemoryStorage.arenaList.stream().filter(arena -> arena.playersInArena.contains(player)).findFirst().orElse(null);
     }
 }

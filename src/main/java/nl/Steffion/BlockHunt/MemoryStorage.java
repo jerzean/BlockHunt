@@ -56,6 +56,7 @@ public class MemoryStorage {
     public static HashMap<Player, Boolean> choosenSeeker = new HashMap<>();
 
     public static HashMap<Player, Long> lastMove = new HashMap<>();
+    public static HashMap<Player, Boolean> cantUseTaunt = new HashMap<>();
 
     public static HashMap<Player, ItemStack> pBlock = new HashMap<>();
     //Hidden Location
