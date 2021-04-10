@@ -28,12 +28,10 @@ public class CommandManager {
     public Permissions permission;
     public ConfigC help;
     public boolean enabled;
-    public List<String> mainTABlist;
     public DefaultCMD CMD;
     public String usage;
 
-    public CommandManager(String name, String label, String args, String argsalias, Permissions permission, ConfigC help, Boolean enabled, List<String> mainTABlist,
-                          DefaultCMD CMD, String usage) {
+    public CommandManager(String name, String label, String args, String argsalias, Permissions permission, ConfigC help, boolean enabled, DefaultCMD CMD, String usage) {
         this.name = name;
         this.label = label;
         this.args = args;
@@ -41,7 +39,6 @@ public class CommandManager {
         this.permission = permission;
         this.help = help;
         this.enabled = enabled;
-        this.mainTABlist = mainTABlist;
         this.CMD = CMD;
         this.usage = usage;
 
