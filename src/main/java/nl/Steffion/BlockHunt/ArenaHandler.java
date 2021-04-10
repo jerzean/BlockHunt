@@ -270,7 +270,7 @@ public class ArenaHandler {
                     ArenaHandler.sendFMessage(arena, ConfigC.warning_ingameNEWSeekerChoosen, "seeker-" + seeker.getName());
                     ArenaHandler.sendFMessage(arena, ConfigC.normal_ingameSeekerChoosen, "seeker-" + seeker.getName());
                     DisguiseAPI.undisguiseToAll(seeker);
-                    for (Player pl : Bukkit.getOnlinePlayers()) {
+                    for (Player pl : arena.playersInArena) {
                         pl.showPlayer(BlockHunt.plugin, seeker);
                     }
                     seeker.getInventory().clear();
@@ -319,7 +319,7 @@ public class ArenaHandler {
             MemoryStorage.pData.remove(player);
             MemoryStorage.choosenBlock.remove(player);
 
-            for (Player pl : Bukkit.getOnlinePlayers()) {
+            for (Player pl : arena.playersInArena) {
                 pl.showPlayer(BlockHunt.plugin, player);
                 if (MemoryStorage.hiddenLoc.get(player) != null) {
                     if (MemoryStorage.hiddenLocWater.get(player) != null) {
@@ -331,9 +331,9 @@ public class ArenaHandler {
                         }
                     }
                 }
-
-                DisguiseAPI.undisguiseToAll(player);
             }
+
+            DisguiseAPI.undisguiseToAll(player);
 
             ScoreboardHandler.removeScoreboard(player);
 
