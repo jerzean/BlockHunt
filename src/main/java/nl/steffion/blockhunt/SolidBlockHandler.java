@@ -1,5 +1,6 @@
 package nl.steffion.blockhunt;
 
+import me.libraryaddict.disguise.DisguiseAPI;
 import nl.steffion.blockhunt.Disguise.Disguise;
 import nl.steffion.blockhunt.Managers.MessageManager;
 import org.bukkit.Bukkit;
@@ -63,7 +64,7 @@ public class SolidBlockHandler {
         itemBlock.removeEnchantment(Enchantment.DURABILITY);
 
         Disguise.disguise(player, arena.playersInArena);
-        DisguiseAPI.disguiseToPlayers(player, disguise, arena.playersInArena);
+        DisguiseAPI.disguiseToPlayers(player, DisguiseAPI.getDisguise(player), arena.playersInArena);
         MessageManager.sendFMessage(player, ConfigC.normal_ingameNoMoreSolid);
     }
 }
